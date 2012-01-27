@@ -126,6 +126,36 @@ function ar_gabung_huruf_mati($ar_string) {
 // return : string arabic dengan akhir ayat disesuaikan
 function ar_akhir_ayat($ar_string) {
     
+    $arr = ar_string_to_array($ar_string);
+    $len = count($arr);
+    
+    if ($arr[$len-1] == ALIF || $arr[$len-1] == ALIF_MAQSURA) {
+        // jika diakhiri alif / alif maqsura (tanpa harakat)
+        // hapus karakter tersebut
+        array_pop($arr);
+        
+    } else if($arr[$len-1] == FATHAH || $arr[$len-1] == KASRAH || $arr[$len-1] == DHAMMAH ||
+              $arr[$len-1] == KASRATAIN || $arr[$len-1] == DHAMMATAIN) {
+        // jika diakhiri tanda vokal / tanwin (kecuali fathatain)
+        // ganti dengan sukun
+        $arr[$len-1] = SUKUN;
+    }
+    
+    // hitung ulang seandainya di atas tadi ada yang dihapus
+    $len = count($arr);
+    
+    if ($arr[$len-1] == FATHATAIN) {
+        // jika harakat terakhir fathatain
+        // ganti dengan fathah
+        $arr[$len-1] = FATHAH;
+    }    
+    
+    if ($arr[$len-2] == TA_MARBUTAH) {
+        // jika huruf terakhir ta marbutah, ganti dengan ha
+        $arr[$len-2] = HHA;
+    }    
+    
+    return ar_array_to_string($arr);
     
 }
 
@@ -134,12 +164,53 @@ function ar_akhir_ayat($ar_string) {
 // return : string arabic dengan tanwin diganti
 function ar_substitusi_tanwin($ar_string) {
     
+    // menggunakan regex
+    $ar_string = mb_ereg_replace(FATHATAIN, FATHAH.NUN.SUKUN, $ar_string);    
+    $ar_string = mb_ereg_replace(KASRATAIN, KASRAH.NUN.SUKUN, $ar_string);    
+    $ar_string = mb_ereg_replace(DHAMMATAIN, DHAMMAH.NUN.SUKUN, $ar_string);    
+
+    return $ar_string;
+    
 }
 
 // menghilangkan mad
 // param  : $ar_string : string teks Al-Quran (arabic)
 // return : string arabic dengan mad dihilangkan
 function ar_hilangkan_mad($ar_string) {
+
+    $arr = ar_string_to_array($ar_string);
+    $len = count($arr);    
+    $str = "";
+    
+    for ($i = 0; $i < $len; $i++) {
+        
+        $curr = $arr[$i];
+        $next1 = isset($arr[$i+1]) ? $arr[$i+1] : $arr[$i];
+        $next2 = isset($arr[$i+2]) ? $arr[$i+2] : $arr[$i];
+        
+        if (
+           ($curr == FATHAH && ($next1 == ALIF || $next1 == ALIF_MAQSURA) && ($next2 != FATHAH && $next2 != KASRAH && $next2 != DHAMMAH))
+           || 
+           ($curr == KASRAH && ($next1 == YA) && ($next2 != FATHAH && $next2 != KASRAH && $next2 != DHAMMAH))
+           || 
+           ($curr == DHAMMAH && ($next1 == WAU) && ($next2 != FATHAH && $next2 != KASRAH && $next2 != DHAMMAH))
+           ) 
+           {
+            // jika syarat terpenuhi
+            // skip saja
+            $str .= $arr[$i];
+            $i += 2;
+            $str .= $arr[$i];
+        } else {
+            $str .= $arr[$i];
+        }
+
+    }
+    
+    // ganti alif madd
+    $str = mb_ereg_replace(ALIF_MAD, HAMZAH_ALIF_A.FATHAH, $str);
+    
+    return $str;
     
 }
 
@@ -147,6 +218,50 @@ function ar_hilangkan_mad($ar_string) {
 // param  : $ar_string : string teks Al-Quran (arabic)
 // return : string arabic dengan huruf tidak dibaca dihilangkan
 function ar_hilangkan_huruf_tidak_dibaca($ar_string) {
+
+    $arr = ar_string_to_array($ar_string);
+    $str = "";
+    
+    for ($i = 0; $i < count($arr); $i++) {
+        
+        $curr = $arr[$i];
+        $next = isset($arr[$i+1]) ? $arr[$i+1] : $arr[$i];
+        
+        if (ar_huruf($curr) && ar_huruf($next)) {
+            // jika yang sekarang adalah huruf dan selanjutnya adalah huruf juga
+            // maka yang sekarang tidak bertanda
+            // maka buang saja
+            $str .= $next;
+            $i++;            
+        } else {
+            $str .= $curr;
+        }
+        
+    }
+
+    $arr = ar_string_to_array($str);
+    $str = "";
+    
+    // 2 kali untuk antisipasi huruf tidak dibaca dobel
+    
+    for ($i = 0; $i < count($arr); $i++) {
+        
+        $curr = $arr[$i];
+        $next = isset($arr[$i+1]) ? $arr[$i+1] : $arr[$i];
+        
+        if (ar_huruf($curr) && ar_huruf($next)) {
+            // jika yang sekarang adalah huruf dan selanjutnya adalah huruf juga
+            // maka yang sekarang tidak bertanda
+            // maka buang saja
+            $str .= $next;
+            $i++;            
+        } else {
+            $str .= $curr;
+        }
+        
+    }    
+    
+    return $str;    
     
 }
 
@@ -154,6 +269,9 @@ function ar_hilangkan_huruf_tidak_dibaca($ar_string) {
 // param  : $ar_string : string teks Al-Quran (arabic)
 // return : string arabic dengan huruf iqlab disesuaikan
 function ar_substitusi_iqlab($ar_string) {
+    
+    // dengan regex
+    return mb_ereg_replace(NUN.SUKUN.BA, MIM.SUKUN.BA, $ar_string);        
     
 }
 
@@ -204,10 +322,21 @@ function ar_array_to_string($ar_array) {
     return $ar_string;
 }
 
+// mengecek suatu karakter huruf atau bukan
+// param  : $ar_char karakter arabic
+// output : boolean
+function ar_huruf($ar_char) {
+    if ($ar_char == FATHAH || $ar_char == KASRAH || $ar_char == DHAMMAH || $ar_char == FATHATAIN || $ar_char == KASRATAIN || $ar_char == DHAMMATAIN || $ar_char == SUKUN || $ar_char == SYADDAH)
+        return false;
+    else
+        return true;
+}
 
+//$ar_string = "تَنَزَّلُ الْمَلَائِكَةُ وَالرُّوحُ فِيهَا بِإِذْنِ رَبِّهِمْ مِنْ كُلِّ أَمْرٍ";
 
-$ar_string = "تَنَزَّلُ الْمَلَائِكَةُ وَالرُّوحُ فِيهَا بِإِذْنِ رَبِّهِمْ مِنْ كُلِّ أَمْرٍ";
+$ar_string = "فِي قُلُوبِهِمْ مَرَضٌ فَزَادَهُمُ اللَّهُ مَرَضًا وَلَهُمْ عَذَابٌ أَلِيمٌ بِمَا كَانُوا يَكْذِبُونَ";
 
-echo ar_gabung_huruf_mati(ar_hilangkan_tasydid(ar_hilangkan_spasi($ar_string)));
+echo "\n ";
+echo ar_substitusi_iqlab(ar_hilangkan_huruf_tidak_dibaca(ar_hilangkan_mad(ar_substitusi_tanwin(ar_akhir_ayat(ar_gabung_huruf_mati(ar_hilangkan_tasydid(ar_hilangkan_spasi($ar_string))))))));
 
 echo "\n\n";
