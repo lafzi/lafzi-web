@@ -53,7 +53,7 @@ define("HAMZAH_ALIF_I", "إ");
 // mengodekan teks arabic menjadi kode fonetik dengan beberapa langkah
 // param  : $ar_string : string teks Al-Quran (arabic)
 // return : kode fonetik 
-function ar_fonetik($ar_string) {
+function ar_fonetik($ar_string, $tanpa_harakat = true) {
     
    $ar_string = ar_hilangkan_spasi($ar_string);
    $ar_string = ar_hilangkan_tasydid($ar_string);
@@ -64,7 +64,7 @@ function ar_fonetik($ar_string) {
    $ar_string = ar_hilangkan_huruf_tidak_dibaca($ar_string);
    $ar_string = ar_substitusi_iqlab($ar_string);
    $ar_string = ar_substitusi_idgham($ar_string);
-   $ar_string = ar_hilangkan_harakat($ar_string);
+   if ($tanpa_harakat) $ar_string = ar_hilangkan_harakat($ar_string);
    $kode_fonetik = ar_fonetik_encode($ar_string);
    
    return $kode_fonetik;
@@ -154,6 +154,13 @@ function ar_akhir_ayat($ar_string) {
         // jika huruf terakhir ta marbutah, ganti dengan ha
         $arr[$len-2] = HHA;
     }    
+    
+    // alif di awal
+    if ($arr[0] == ALIF) {
+        array_shift($arr);
+        array_unshift($arr, FATHAH);
+        array_unshift($arr, HAMZAH_ALIF_A);
+    }
     
     return ar_array_to_string($arr);
     
@@ -280,12 +287,41 @@ function ar_substitusi_iqlab($ar_string) {
 // return : string arabic dengan huruf idgham disesuaikan
 function ar_substitusi_idgham($ar_string) {
     
+    $ar_string = mb_ereg_replace(NUN.SUKUN.NUN, NUN, $ar_string);    
+    $ar_string = mb_ereg_replace(NUN.SUKUN.MIM, MIM, $ar_string);    
+    $ar_string = mb_ereg_replace(NUN.SUKUN.LAM, LAM, $ar_string);    
+    $ar_string = mb_ereg_replace(NUN.SUKUN.RA, RA, $ar_string);    
+
+    // pengecualian
+    $ar_string = mb_ereg_replace("دُنْي", "DUNYA", $ar_string);
+    $ar_string = mb_ereg_replace("بُنْيَن", "BUNYAN", $ar_string);
+    $ar_string = mb_ereg_replace("صِنْوَن", "SINWAN", $ar_string);
+    $ar_string = mb_ereg_replace("قِنْوَن", "QINWAN", $ar_string);
+    
+    $ar_string = mb_ereg_replace(NUN.SUKUN.YA, YA, $ar_string);    
+    $ar_string = mb_ereg_replace(NUN.SUKUN.WAU, WAU, $ar_string);
+
+    // dikembalikan lagi
+    $ar_string = mb_ereg_replace("DUNYA", "دُنْي", $ar_string);    
+    $ar_string = mb_ereg_replace("BUNYAN", "بُنْيَن", $ar_string);
+    $ar_string = mb_ereg_replace("SINWAN", "صِنْوَن", $ar_string);
+    $ar_string = mb_ereg_replace("QINWAN", "قِنْوَن", $ar_string);
+    
+    return $ar_string;
+    
 }
 
 // menghilangkan harakat
 // param  : $ar_string : string teks Al-Quran (arabic)
 // return : string arabic tanpa harakat
 function ar_hilangkan_harakat($ar_string) {
+
+    $ar_string = mb_ereg_replace(FATHAH, "", $ar_string);    
+    $ar_string = mb_ereg_replace(KASRAH, "", $ar_string);    
+    $ar_string = mb_ereg_replace(DHAMMAH, "", $ar_string);    
+    $ar_string = mb_ereg_replace(SUKUN, "", $ar_string); 
+    
+    return $ar_string;
     
 }
 
@@ -293,6 +329,60 @@ function ar_hilangkan_harakat($ar_string) {
 // param  : $ar_string : string teks Al-Quran (arabic)
 // return : string latin (kode fonetik)
 function ar_fonetik_encode($ar_string) {
+    
+    $arr = ar_string_to_array($ar_string);
+    $str = "";
+    
+    $map = array(
+        JIM => "Z",
+        ZA  => "Z",
+        HHA => "H",
+        KHA => "H",
+        HA  => "H",
+        HAMZAH         => "X",
+        HAMZAH_ALIF_A  => "X",
+        HAMZAH_ALIF_I  => "X",
+        HAMZAH_MAQSURA => "X",
+        HAMZAH_WAU     => "X",
+        ALIF           => "X",
+        AIN            => "X",
+        SHAD => "S",
+        TSA  => "S",
+        SYIN => "S",
+        SIN  => "S",
+        ZHA  => "D",
+        DHAD => "D",
+        DZAL => "D",
+        DAL  => "D",
+        TA_MARBUTAH  => "T",
+        TA           => "T",
+        THA          => "T",
+        QAF  => "K",
+        KAF  => "K",
+        GHAIN => "G",
+        FA  => "F",
+        MIM => "M",
+        NUN => "N",
+        LAM => "L",
+        BA  => "B",
+        YA  => "Y",
+        WAU => "W",
+        RA  => "R",
+        
+        FATHAH  => "A",
+        KASRAH  => "I",
+        DHAMMAH => "U",
+        SUKUN   => ""
+    );
+    
+    for ($i = 0; $i < count($arr); $i++) {
+        
+        $char = $arr[$i];
+        $str .= $map[$char];
+        
+    }
+    
+    return $str;
     
 }
 
@@ -332,11 +422,13 @@ function ar_huruf($ar_char) {
         return true;
 }
 
-//$ar_string = "تَنَزَّلُ الْمَلَائِكَةُ وَالرُّوحُ فِيهَا بِإِذْنِ رَبِّهِمْ مِنْ كُلِّ أَمْرٍ";
+/* test suite 
 
-$ar_string = "فِي قُلُوبِهِمْ مَرَضٌ فَزَادَهُمُ اللَّهُ مَرَضًا وَلَهُمْ عَذَابٌ أَلِيمٌ بِمَا كَانُوا يَكْذِبُونَ";
+$ar_string = "اعْلَمُوا أَنَّمَا الْحَيَاةُ الدُّنْيَا لَعِبٌ وَلَهْوٌ وَزِينَةٌ وَتَفَاخُرٌ بَيْنَكُمْ وَتَكَاثُرٌ فِي الْأَمْوَالِ وَالْأَوْلَادِ كَمَثَلِ غَيْثٍ أَعْجَبَ الْكُفَّارَ نَبَاتُهُ ثُمَّ يَهِيجُ فَتَرَاهُ مُصْفَرًّا ثُمَّ يَكُونُ حُطَامًا وَفِي الْآخِرَةِ عَذَابٌ شَدِيدٌ وَمَغْفِرَةٌ مِنَ اللَّهِ وَرِضْوَانٌ وَمَا الْحَيَاةُ الدُّنْيَا إِلَّا مَتَاعُ الْغُرُورِ";
 
 echo "\n ";
-echo ar_substitusi_iqlab(ar_hilangkan_huruf_tidak_dibaca(ar_hilangkan_mad(ar_substitusi_tanwin(ar_akhir_ayat(ar_gabung_huruf_mati(ar_hilangkan_tasydid(ar_hilangkan_spasi($ar_string))))))));
+echo ar_fonetik($ar_string, false);
 
 echo "\n\n";
+
+ */
