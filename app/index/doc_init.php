@@ -29,7 +29,7 @@ foreach ($docs as $doc) {
     $fonetik = ar_fonetik($data[2]);
     $fonetik_berharakat = ar_fonetik($data[2], false);
     
-    $query = "INSERT INTO doc (id, surat, ayat, teks, fonetik_konsonan, fonetik_vokal) VALUES ('{$id}', '{$data[0]}', '{$data[1]}', '{$data[2]}', '{$fonetik}', '{$fonetik_berharakat}')";
+    $query = "INSERT INTO doc (id, surat, ayat, teks, fonetik, fonetik_vokal) VALUES ('{$id}', '{$data[0]}', '{$data[1]}', '{$data[2]}', '{$fonetik}', '{$fonetik_berharakat}')";
 
     $db->query($query);
 

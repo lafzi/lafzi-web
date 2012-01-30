@@ -1,8 +1,8 @@
 1|Al-Fatihah|7
 2|Al-Baqarah|286
-3|Al-Imran|200
+3|Ali-'Imran|200
 4|An-Nisa'|176
-5|Al-MAldah|120
+5|Al-Maidah|120
 6|Al-An'am|165
 7|Al-A'raf|206
 8|Al-Anfal|75
@@ -20,7 +20,7 @@
 20|Thaha|135
 21|Al-Anbiya'|112
 22|Al-Hajj|78
-23|Al-Mu’minun|118
+23|Al-Mu'minun|118
 24|An-Nur|64
 25|Al-Furqan|77
 26|Asy-Syu'ara'|227
@@ -70,7 +70,7 @@
 70|Al-Ma’arij|44
 71|Nuh|28
 72|Al-Jin|28
-73|Al-Muzzanmmil|20
+73|Al-Muzzammil|20
 74|Al-Muddatstsir|56
 75|Al-Qiyamah|40
 76|Al-Insan|31
@@ -79,17 +79,17 @@
 79|An-Nazi’at|46
 80|'Abasa|42
 81|At-Takwir|29
-82|Al-lnfithar|19
+82|Al-Infithar|19
 83|Al-Muthaffifin|36
 84|Al-Insyiqaq|25
 85|Al-Buruj|22
 86|Ath-Thariq|17
-87|Al-A’Ia|19
+87|Al-A’la|19
 88|Al-Ghasiyah|26
 89|Al-Fajr|30
 90|Al-Balad|20
 91|Asy-Syams|15
-92|Al-LAll|21
+92|Al-Lail|21
 93|Adh-Dhuha|11
 94|Alam Nasyrah|8
 95|At-Tin|8
@@ -103,7 +103,7 @@
 103|Al-'Ashr|3
 104|Al-Humazah|9
 105|Al-Fil|5
-106|QurAlsy|4
+106|Quraisy|4
 107|Al-Ma'un|7
 108|Al-Kautsar|3
 109|Al-Kafirun|6
