@@ -3,7 +3,7 @@
 error_reporting(E_ALL & ~E_NOTICE);
 
 include '../lib/db.php';
-include 'fonetik.php';
+include '../lib/fonetik.php';
 
 $db = new mysqlDB();
 $db->connect();

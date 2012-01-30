@@ -6,8 +6,8 @@
 $time_start = microtime(true);
 
 include '../lib/db.php';
-include 'fonetik.php';
-include 'trigram.php';
+include '../lib/fonetik.php';
+include '../lib/trigram.php';
 
 $db = new mysqlDB();
 $db->connect();
