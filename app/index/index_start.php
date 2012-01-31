@@ -13,8 +13,8 @@ $db = new mysqlDB();
 $db->connect();
 
 // parameter
-$doc_field = "fonetik";
-$index_table = "index";
+$doc_field = "fonetik_vokal";
+$index_table = "index2";
 
 // fase I : mengekstrak seluruh term dari seluruh dokumen
 echo "Fase I \n\n"; 
