@@ -5,6 +5,8 @@
 // return : array berisi semua trigram
 function ekstrak_trigram($string) {
     
+    $string = trim($string);
+    
     $len = strlen($string);
     
     if ($len <= 3) return array($string);
@@ -32,8 +34,30 @@ function frekuensi_trigram_string($string) {
     
 }
 
+// menghitung frekuensi trigram
+// param  : $string yang akan dihitung frekuensi dan posisi kemunculan pertama trigramnya
+// return : array berisi trigram sebagai key dan (frekuensi, posisi) sebagai value
+function trigram_frekuensi_posisi($string) {
+    
+    $array = ekstrak_trigram($string);
+    $array_freq = array_count_values($array);
+    
+    $res = array();
+    
+    foreach ($array_freq as $trigram => $freq) {
+        
+        $pos = strpos($string, $trigram) + 1;
+        $res[$trigram] = array($freq, $pos);
+        
+    }
+    
+    return $res;
+    
+}
+
+
 // test suite
 
-// print_r(frekuensi_trigram_string("TO BE OR NOT TO BE IS THE QUESTION")); 
+// print_r(frekuensi_posisi_trigram_string("TESTTEST")); 
  
 

@@ -13,7 +13,7 @@ $db->query("set character_set_server='utf8'");
 $db->query("set names 'utf8'");
 
 // baca file, satu baris disimpan dalam satu array
-$docs = file('quran-simple-wnum-edit.txt');
+$docs = file('../data/quran-simple-wnum-edit.txt');
 
 $count = 0;
 $id = 1;
