@@ -7,6 +7,7 @@ $time_start = microtime(true);
 
 include '../lib/trigram.php';
 include '../lib/array_utility.php';
+include '../lib/doc_class.php';
 
 // file term list dan posting list
 $term_list_filename = "../data/index_termlist_vokal.txt";
@@ -27,44 +28,49 @@ unset($term_list);
 // akses posting list tanpa dibaca
 $post_list_file = new SplFileObject($post_list_filename);
 
-$query_final = "LATAKUMFIHIABADA"; // seharusnya melalui algoritma fonetik juga
+$query_final = "HUDALINASIWABAYINATIMINALHUDAWALFURKAN"; // seharusnya melalui algoritma fonetik juga
 
-// ekstrak trigram dari query ==================================================
-$query_trigrams = ekstrak_trigram($query_final);
+// ekstrak trigram dari query
+$query_trigrams = trigram_frekuensi_posisi($query_final);
 $query_trigrams_count = count($query_trigrams);
 
 $matched_posting_list_string = "";
 $matched_posting_lists = array();
-
-foreach ($query_trigrams as $query_trigram) {
-    if (isset($term_hashmap[$query_trigram])) {
-        
-        $post_list_file->fseek($term_hashmap[$query_trigram]);
-    
-        $matched_posting_list_string .= trim($post_list_file->current()) . ",";
-        
-    }
-}
-
-$matched_posting_lists = explode(",", $matched_posting_list_string);
-
 $matched_docs = array();
 
-foreach ($matched_posting_lists as $data) {
-    if ($data != "") {
+// untuk setiap trigram dari query
+foreach ($query_trigrams as $query_trigram => $qtfp) {
+    list($qt_freq, $qt_pos) = $qtfp;
+    
+    if (isset($term_hashmap[$query_trigram])) {    
+        // ambil posting list yang sesuai untuk trigram ini
+        $post_list_file->fseek($term_hashmap[$query_trigram]);
+        $matched_posting_lists = explode(",", trim($post_list_file->current()));
         
-        list($doc_id, $term_freq, $pos) = explode(":", $data);
-        if (isset($matched_docs[$doc_id])) 
-            $matched_docs[$doc_id]++;
-        else
-            $matched_docs[$doc_id] = 0;        
+        // untuk setiap posting list untuk trigram ini
+        foreach ($matched_posting_lists as $data) {
+            list ($doc_id, $term_freq, $term_pos) = explode(":", $data);
+
+            // hitung jumlah kemunculan dll
+            if (isset($matched_docs[$doc_id])) {
+                $matched_docs[$doc_id]->matched_trigrams_count += ($qt_freq < $term_freq) ? $qt_freq : $term_freq;
+                $matched_docs[$doc_id]->matched_terms[$query_trigram] = $term_pos;
+            } else {
+                $matched_docs[$doc_id] = new found_doc();
+                $matched_docs[$doc_id]->matched_trigrams_count = 1;
+                $matched_docs[$doc_id]->id = $doc_id;
+                $matched_docs[$doc_id]->matched_terms[$query_trigram] = $term_pos;
+            }
+                        
+        }
+        
     }
 }
 
-arsort($matched_docs);
+// urutkan berdasarkan jumlah kemunculan trigram
+usort($matched_docs, "matched_docs_cmp");
 
-//print_r($matched_docs);
-
+print_r($matched_docs);
 
 // hasil profiling waktu eksekusi
 $time_end = microtime(true);

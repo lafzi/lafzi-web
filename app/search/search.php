@@ -100,7 +100,7 @@ foreach ($posting_lists_freq as $doc_id => $common_trigrams_count) {
 }
 
 // output sederhana ============================================================
-
+/*
 echo "Hasil pencarian\n";
 echo "===============\n\n";
 
@@ -119,10 +119,12 @@ foreach ($retrieved as $doc) {
     echo "  Surat {$doc_data[0]['surat']} ayat {$doc_data[0]['ayat']}\n";
     echo "  Teks : {$doc_data[0]['teks']}\n\n";
     
-}
+}*/
 
 // hasil profiling waktu eksekusi
 $time_end = microtime(true);
 $time = $time_end - $time_start;
  
 echo "\nPencarian dalam $time detik\n";
+echo "Memory usage      : " . memory_get_usage() . "\n";
+echo "Memory peak usage : " . memory_get_peak_usage() . "\n";

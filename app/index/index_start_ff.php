@@ -24,6 +24,9 @@ $docs_count = count($docs);
 // array besar penyimpan indeks
 $index = array();
 
+$limit = 8000;
+$i = 1;
+
 // untuk setiap dokumen
 foreach ($docs as $doc) {
     
@@ -48,6 +51,9 @@ foreach ($docs as $doc) {
     echo "OK\t";
     echo "(". round($id/$docs_count*100) ."%)";
     echo "\n";
+    
+    if ($i >= $limit) break;
+    $i++;
     
 }
 
