@@ -5,7 +5,7 @@ class found_doc {
     
     var $id;
     var $matched_trigrams_count = 0;
-    var $matched_terms_order_score = 0;
+    //var $matched_terms_order_score = 0;
     var $matched_terms_count_score = 0;
     var $score = 0;
     var $matched_terms = array();
