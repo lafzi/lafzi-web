@@ -9,6 +9,7 @@ class found_doc {
     var $matched_terms_count_score = 0;
     var $score = 0;
     var $matched_terms = array();
+    var $text_content = "";
     
 }
 

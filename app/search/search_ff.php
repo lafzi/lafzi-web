@@ -12,6 +12,7 @@ include '../lib/doc_class.php';
 // file term list dan posting list
 $term_list_filename = "../data/index_termlist_vokal.txt";
 $post_list_filename = "../data/index_postlist_vokal.txt";
+$quran_text_filename = "../data/quran-simple-wnum-edit.txt";
 
 // baca seluruh term list
 $term_list = file($term_list_filename);
@@ -28,7 +29,7 @@ unset($term_list);
 // akses posting list
 $post_list_file = new SplFileObject($post_list_filename);
 
-$query_final = "KULHUWALAHUAHAD"; // seharusnya melalui algoritma fonetik juga
+$query_final = "WAZAWAZNAHUBIHURINXIN"; // seharusnya melalui algoritma fonetik juga
 
 // ekstrak trigram dari query
 $query_trigrams = trigram_frekuensi_posisi($query_final);
@@ -66,7 +67,7 @@ foreach ($query_trigrams as $query_trigram => $qtfp) {
     }
 }
 
-// pemberian skor berdasarkan jumlah trigram yang sama + keterurutan term
+// pemberian skor berdasarkan jumlah trigram yang sama
 foreach ($matched_docs as $doc_found) {
     $doc_found->matched_terms_count_score = $doc_found->matched_trigrams_count / $query_trigrams_count_all;
     $doc_found->score = $doc_found->matched_terms_count_score;
