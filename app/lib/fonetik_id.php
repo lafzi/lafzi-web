@@ -86,7 +86,8 @@ function id_substitusi_diftong($string) {
 function id_tandai_hamzah($string) {
     
     // setelah spasi atau di awal string
-    $string = preg_replace("/^|\s(A|I|U)/", " X$1", $string);
+    $string = preg_replace("/^(A|I|U)/", " X$1", $string);
+    $string = preg_replace("/\s(A|I|U)/", " X$1", $string);
 
     // IA, IU => IXA, IXU
     $string = preg_replace("/I(A|U)/", "IX$1", $string);
@@ -154,7 +155,6 @@ function id_fonetik_2_konsonan($string) {
 // return : kode fonetik string
 function id_fonetik_1_konsonan($string) {
     
-    $string = preg_replace("/J|Z|C/", "Z", $string);
     $string = preg_replace("/'|`/", "X", $string);
     $string = preg_replace("/Q|K/", "K", $string);
     $string = preg_replace("/F|V|P/", "F", $string);
@@ -170,7 +170,8 @@ function id_substitusi_syamsiyyah($string) {
     
     // L + R,S,L,Z,N,D,T
     $string = preg_replace("/L\s?(R|S|L|Z|N|D|T)/", "$1", $string);
-
+    $string = preg_replace("/J|Z/", "Z", $string);
+    
     return $string;
     
 }
@@ -195,8 +196,9 @@ function id_hilangkan_vokal($string) {
     
 }
 
-
+/*
 echo id_fonetik(
-"INNAA LILLAAHI WAINNA ILAIHI ROOJI'UN MINAL JINNI Al-maa`idah??????????",
+"INNAA LILLAAHI WAINNA ILAIHI ROOJI'UN MINAL JINNI WAL-ZAANIYATI",
 false)
 . "\n";
+*/
