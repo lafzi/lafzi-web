@@ -15,7 +15,7 @@ $term_list_filename = "../data/index_termlist_vokal.txt";
 $post_list_filename = "../data/index_postlist_vokal.txt";
 
 $matched_docs =& search($query_final, $term_list_filename, $post_list_filename); // using ff
-// $matched_docs =& search($query_final, 'index2'); // using db
+//$matched_docs =& search($query_final, 'index2'); // using db
 
 // hasil profiling waktu eksekusi
 $time_end = microtime(true);

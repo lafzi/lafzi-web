@@ -13,17 +13,16 @@ include_once '../lib/doc_class.php';
 // return : array of found_doc object
 function search($query_final, $term_list_filename, $post_list_filename) {
 
-    // baca seluruh term list
-    $term_list = file($term_list_filename);
+    // baca seluruh term list simpan dalam hashmap
     $term_hashmap = array();
+    $term_list = fopen($term_list_filename, 'r');
 
-    // simpan dalam hashmap
-    foreach ($term_list as $line) {
+    while (($line = fgets($term_list, 32)) !== false) {
         list($term, $offset) = explode('|', $line);
         $term_hashmap[$term] = intval($offset);
     }
 
-    unset($term_list);
+    fclose($term_list);    
     
     // akses posting list
     $post_list_file = new SplFileObject($post_list_filename);

@@ -7,7 +7,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 include '../lib/fonetik.php';
 
 // baca file, satu baris disimpan dalam satu array
-$docs = file('../data/quran-simple-wnum-edit.txt');
+$docs = file('../data/quran_teks.txt');
 
 $count = 0;
 $id = 1;
@@ -22,10 +22,10 @@ foreach ($docs as $doc) {
     // split pada karakter "|"
     // [0] = nomor surat
     // [1] = nomor ayat
-    // [2] = teks ayat
+    // [3] = teks ayat
     $data = mb_split("\|", $doc);
     
-    $fonetik = ar_fonetik($data[2], !$bervokal);
+    $fonetik = ar_fonetik($data[3], !$bervokal);
     
     fwrite($f, $id."|".$fonetik."\n");
 
