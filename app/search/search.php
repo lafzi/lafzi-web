@@ -1,106 +1,79 @@
 <?php
 
-// prototipe pencari
+// prototipe pencari, db version
 
-// profiling
-$time_start = microtime(true);
+include_once '../lib/trigram.php';
+include_once '../lib/array_utility.php';
+include_once '../lib/doc_class.php';
+include_once '../lib/db.php';
 
-include '../lib/db.php';
-include '../lib/trigram.php';
-include '../lib/array_utility.php';
+if (!isset($db)) {
+    $db = new mysqlDB();
+    $db->connect();
+}
 
-$db = new mysqlDB;
-$db->connect();
+// fungsi pencari
+// param  : $query_final yang siap cari (sudah melalui pengodean fonetik)
+//          $term_list_filename nama file term list
+//          $post_list_filename nama file posting list
+// return : array of found_doc object
+function search($query_final, $index_table) {
 
-// sesuaikan encoding
-$db->query("set character_set_server='utf8'");
-$db->query("set names 'utf8'");
+    global $db;
+    
+    // ekstrak trigram dari query
+    $query_trigrams = trigram_frekuensi_posisi($query_final);
+    $query_trigrams_count = count($query_trigrams);
+    $query_trigrams_count_all = strlen($query_final) - 2;
 
-// input
-$index_table = 'index2';
-$query_final = "LATAKUMFIHIABADA"; // seharusnya melalui algoritma fonetik juga
-$threshold = 0.6;
+    $matched_posting_lists = array();
+    $matched_docs = array();
 
-// ekstrak trigram dari query ==================================================
-$query_trigrams = ekstrak_trigram($query_final);
-$query_trigrams_count = count($query_trigrams);
+    // untuk setiap trigram dari query
+    foreach ($query_trigrams as $query_trigram => $qtfp) {
+        list($qt_freq, $qt_pos) = $qtfp;
 
-// frekuensi trigram query
-$query_trigrams_freq = array_count_values($query_trigrams);
+        // ambil posting list yang sesuai untuk trigram ini
+        // $post_list_file->fseek($term_hashmap[$query_trigram]);
 
-// pisahkan trigram yang unik (tidak berulang) dan nonunik
-$query_trigrams_u = array();
-$query_trigrams_nu = array();
-foreach ($query_trigrams_freq as $qt => $qtf) {
-    if ($qtf == 1) {
-        $query_trigrams_u[] = $qt; // tidak perlu disimpan frekuensi karena pasti 1
-    } else {
-        $query_trigrams_nu[] = array('trigram' => $qt, 'freq' => $qtf);
+        $term = $db->get_result("SELECT `posting_list` FROM `$index_table` WHERE `term` = '$query_trigram'");
+
+        $matched_posting_lists = explode(',', $term[0]);
+
+        // untuk setiap posting list untuk trigram ini
+        foreach ($matched_posting_lists as $data) {
+            list ($doc_id, $term_freq, $term_pos) = explode(':', $data);
+
+            // hitung jumlah kemunculan dll
+            if (isset($matched_docs[$doc_id])) {
+                $matched_docs[$doc_id]->matched_trigrams_count += ($qt_freq < $term_freq) ? $qt_freq : $term_freq;
+            } else {
+                $matched_docs[$doc_id] = new found_doc();
+                $matched_docs[$doc_id]->matched_trigrams_count = 1;
+                $matched_docs[$doc_id]->id = $doc_id;
+            }
+
+            $matched_docs[$doc_id]->matched_terms[$query_trigram] = $term_pos;
+        }
+
     }
-}
 
-// cari dalam indeks semua entri yang mengandung trigram unik dari query =======
-$db_search_query = "SELECT * FROM `$index_table` WHERE `term` IN ('{$query_trigrams_u[0]}'";
-
-for ($i = 1; $i < count($query_trigrams_u); $i++) {
-    $db_search_query .= ", '{$query_trigrams_u[$i]}'";
-}
-
-$db_search_query .= ")";
-
-$db_search_result = $db->get_result($db_search_query, "assoc");
-
-$posting_lists = array();
-$posting_lists_string = "";
-
-// cari dalam indeks semua entri yang mengandung trigram nonunik dari query ====
-
-foreach ($query_trigrams_nu as $el) {
-    
-    $res = $db->get_result("SELECT * FROM `$index_table` WHERE `term` = '{$el['trigram']}'", "assoc");
-   
-    $pl = explode(",", $res[0]['posting_list']);
-    $fl = explode(",", $res[0]['freq_list']);
-    
-    $pl = array_repeat_freq($pl, array_min_value($fl, $el['freq']));
-    
-    $posting_lists_string .= implode(",", $pl) . ",";
-    
-}
-
-// gabungkan seluruh posting_list yang didapat untuk trigram unik ==============
-for ($i = 0; $i < count($db_search_result); $i++) {
-    // via string untuk optimalisasi performa
-    $posting_lists_string .= $db_search_result[$i]['posting_list'] . ",";    
-}
-
-// hitung frekuensi (= jumlah common trigram) ==================================
-$posting_lists = explode(",", $posting_lists_string);
-$posting_lists_freq = array_count_values($posting_lists);
-
-// diurutkan berdasarkan yang paling banyak cocoknya ===========================
-arsort($posting_lists_freq);
-
-// akan menampung daftar dokumen yang "dianggap relevan" =======================
-$retrieved = array();
-$n_threshold = $threshold * $query_trigrams_count;
-
-foreach ($posting_lists_freq as $doc_id => $common_trigrams_count) {
-    
-    // difilter berdasarkan threshold
-    if ($common_trigrams_count >= $n_threshold) {
-        
-        $retrieved[] = array(
-            "doc_id" => $doc_id,
-            "relevance" => $common_trigrams_count / $query_trigrams_count
-        );
-        
+    // pemberian skor berdasarkan jumlah trigram yang sama
+    foreach ($matched_docs as $doc_found) {
+        $doc_found->matched_terms_count_score = $doc_found->matched_trigrams_count / $query_trigrams_count_all;
+        $doc_found->score = $doc_found->matched_terms_count_score;
     }
+
+    // urutkan berdasarkan doc->score
+    usort($matched_docs, 'matched_docs_cmp');
+
+    return $matched_docs;
     
 }
 
-// output sederhana ============================================================
 /*
+// output sederhana ============================================================
+
 echo "Hasil pencarian\n";
 echo "===============\n\n";
 
@@ -112,14 +85,15 @@ echo "Hasil cari           : \n\n";
 
 foreach ($retrieved as $doc) {
     
-    echo "- Dokumen #{$doc['doc_id']} (relevansi : ".round($doc['relevance'], 2).")\n";
-    
-    $doc_data = $db->get_result("SELECT * FROM `doc` WHERE `id` = {$doc['doc_id']}", "assoc");
-    
-    echo "  Surat {$doc_data[0]['surat']} ayat {$doc_data[0]['ayat']}\n";
-    echo "  Teks : {$doc_data[0]['teks']}\n\n";
-    
-}*/
+    if (!empty($doc['doc_id'])) {
+        echo "- Dokumen #{$doc['doc_id']} (relevansi : ".round($doc['relevance'], 2).")\n";
+
+        $doc_data = $db->get_result("SELECT * FROM `doc` WHERE `id` = {$doc['doc_id']}", "assoc");
+
+        echo "  Surat {$doc_data[0]['surat']} ayat {$doc_data[0]['ayat']}\n";
+        echo "  Teks : {$doc_data[0]['teks']}\n\n";
+    }
+}
 
 // hasil profiling waktu eksekusi
 $time_end = microtime(true);
@@ -128,3 +102,4 @@ $time = $time_end - $time_start;
 echo "\nPencarian dalam $time detik\n";
 echo "Memory usage      : " . memory_get_usage() . "\n";
 echo "Memory peak usage : " . memory_get_peak_usage() . "\n";
+*/

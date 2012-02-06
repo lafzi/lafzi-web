@@ -24,7 +24,7 @@ function search($query_final, $term_list_filename, $post_list_filename) {
     }
 
     unset($term_list);
-
+    
     // akses posting list
     $post_list_file = new SplFileObject($post_list_filename);
 

@@ -91,7 +91,7 @@
 91|Asy-Syams|15
 92|Al-Lail|21
 93|Adh-Dhuha|11
-94|Alam Nasyrah|8
+94|Al-Insyirah|8
 95|At-Tin|8
 96|Al-'Alaq|19
 97|Al-Qadr|5

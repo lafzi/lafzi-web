@@ -13,8 +13,8 @@ $db = new mysqlDB();
 $db->connect();
 
 // parameter
-$doc_field = "fonetik_vokal";
-$index_table = "index2";
+$doc_field = "fonetik";
+$index_table = "index";
 
 // fase I : mengekstrak seluruh term dari seluruh dokumen
 echo "Fase I \n\n"; 
@@ -23,12 +23,11 @@ echo "Fase I \n\n";
 $docs = $db->get_result("SELECT `id`, `{$doc_field}` AS `fonetik` FROM `doc`", "assoc");
 $docs_count = count($docs);
 
-// buat tabel temporer untuk indeks sementara
-$db->query("CREATE TEMPORARY TABLE `temp_index` (
-                `trigram` char(3) NOT NULL,
-                `doc_id` int(11) NOT NULL,
-                 KEY `trigram` (`trigram`)
-            ) ENGINE=MyISAM;");
+// array besar penyimpan indeks
+$index = array();
+
+$limit = 8000;
+$i = 1;
 
 // untuk setiap dokumen
 foreach ($docs as $doc) {
@@ -36,21 +35,27 @@ foreach ($docs as $doc) {
     $id = $doc['id'];
     $text = $doc['fonetik'];
 
-    echo "Membaca dokumen $id : ";
+    echo "Memproses dokumen $id : ";
         
     // ekstrak trigram
-    $trigrams = ekstrak_trigram($text);
+    $trigrams = trigram_frekuensi_posisi($text);
     
-    foreach ($trigrams as $trigram) {
+    foreach ($trigrams as $trigram => $fp) {
         
-        // masukkan entri ke indeks sementara
-        $db->query("INSERT INTO `temp_index` (`trigram`, `doc_id`) VALUES ('$trigram', '$id')");
+        // $fp[0] = frekuensi, $fp[1] = posisi trigram
+        list($freq, $pos) = $fp;
+        
+        // masukkan entri ke array indeks
+        $index[$trigram][] = array($id, $freq, $pos);
         
     }
     
     echo "OK\t";
     echo "(". round($id/$docs_count*100) ."%)";
     echo "\n";
+    
+    if ($i >= $limit) break;
+    $i++;
     
 }
 
@@ -60,42 +65,37 @@ echo "\nFase II \n\n";
 // kosongkan dulu tabel indeks
 $db->query("TRUNCATE `{$index_table}`");
 
-// dapatkan seluruh trigram yang ada pada indeks sementara
-$trigram_terms = $db->get_result("SELECT DISTINCT `trigram` FROM `temp_index` ORDER BY `trigram`");
+// urutkan key pada array indeks
+ksort($index);
 
-foreach ($trigram_terms as $term) {
+foreach ($index as $term => $postings) {
     
     $posting_list = array();
-    $freq_list = array();
+    $posting_list_string = "";
     
-    // dapatkan ID dokumen yang memiliki term ini
-    $doc_list = $db->get_result("SELECT `doc_id` FROM `temp_index` WHERE `trigram` = '$term' ORDER BY `doc_id`");
-    
-    // hitung frekuensi unik
-    $doc_list = array_count_values($doc_list);
-    ksort($doc_list);
-    
-    foreach ($doc_list as $doc_id => $freq) {
-        $posting_list[] = $doc_id;
-        $freq_list[] = $freq;
+    // setiap value indeks adalah beberapa posting
+    foreach ($postings as $posting) {
+        
+        // format id:frekuensi:posisi
+        list($id, $freq, $pos) = $posting;
+        $posting_string = "$id:$freq:$pos";
+        $posting_list[] = $posting_string;
+        
     }
     
-    // posting list disimpan dalam bentuk string dipisah koma
+    $df = count($postings);
+    
     $posting_list_string = implode(",", $posting_list);
-    $freq_list_string = implode(",", $freq_list);
-    
-    // hitung DF
-    $df = count($posting_list);
-    
-    echo "Term $term : $df dokumen (". substr($posting_list_string, 0, 10) ." -> " . substr($freq_list_string, 0, 10) . ")\n";
+ 
+    echo "Menulis term $term ($df dokumen)\n";
     
     // masukkan ke indeks yang sebenarnya
-    $db->query("INSERT INTO `{$index_table}` (`term`, `df`, `posting_list`, `freq_list`) VALUES ('$term', '$df', '$posting_list_string', '$freq_list_string')");
+    $db->query("INSERT INTO `{$index_table}` (`term`, `posting_list`) VALUES ('$term', '$posting_list_string')");
     
 }
 
-// selesai, hapus tabel temporer tadi
-$db->query("DROP TABLE `temp_index`");
+// selesai, hapus index di memory
+unset($index);
 
 // hasil profiling waktu eksekusi
 $time_end = microtime(true);
