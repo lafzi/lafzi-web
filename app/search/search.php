@@ -70,36 +70,3 @@ function search($query_final, $index_table) {
     return $matched_docs;
     
 }
-
-/*
-// output sederhana ============================================================
-
-echo "Hasil pencarian\n";
-echo "===============\n\n";
-
-echo "Query                : $query_final\n";
-echo "Jumlah trigram query : $query_trigrams_count (".count($query_trigrams_u)." unik)\n";
-echo "Threshold            : $threshold\n";
-echo "Ditemukan            : ".count($retrieved)." dokumen\n";
-echo "Hasil cari           : \n\n";
-
-foreach ($retrieved as $doc) {
-    
-    if (!empty($doc['doc_id'])) {
-        echo "- Dokumen #{$doc['doc_id']} (relevansi : ".round($doc['relevance'], 2).")\n";
-
-        $doc_data = $db->get_result("SELECT * FROM `doc` WHERE `id` = {$doc['doc_id']}", "assoc");
-
-        echo "  Surat {$doc_data[0]['surat']} ayat {$doc_data[0]['ayat']}\n";
-        echo "  Teks : {$doc_data[0]['teks']}\n\n";
-    }
-}
-
-// hasil profiling waktu eksekusi
-$time_end = microtime(true);
-$time = $time_end - $time_start;
- 
-echo "\nPencarian dalam $time detik\n";
-echo "Memory usage      : " . memory_get_usage() . "\n";
-echo "Memory peak usage : " . memory_get_peak_usage() . "\n";
-*/
