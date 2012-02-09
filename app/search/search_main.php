@@ -1,3 +1,6 @@
+Iliopoulos
+Algorithm for computing variants of LCS
+
 <?php
 
 include 'search_ff.php';
@@ -6,7 +9,8 @@ include '../lib/fonetik_id.php';
 // profiling
 $time_start = microtime(true);
 
-$query = "al-yauma akmaltu lakum diinakum";
+$query = "illaa maasyaa allah";
+
 $query_final = id_fonetik($query, false);
 $query_trigrams_count = strlen($query_final) - 2;
 
@@ -18,6 +22,8 @@ $matched_docs =& search($query_final, $term_list_filename, $post_list_filename);
 $num_doc_found = count($matched_docs);
 $quran_text = file("../data/quran_teks.txt", FILE_IGNORE_NEW_LINES);
 
+$limit = 10;
+
 // output
 
 echo "Hasil pencarian\n";
@@ -27,9 +33,9 @@ echo "Query                : $query\n";
 echo "Kode fonetik         : $query_final\n";
 echo "Jumlah trigram query : $query_trigrams_count\n";
 echo "Ditemukan            : $num_doc_found dokumen\n";
-echo "Hasil cari (top 10)  : \n\n";
+echo "Hasil cari (top $limit)  : \n\n";
 
-for ($i = 0; $i < 10; $i++) {
+for ($i = 0; $i < $limit; $i++) {
     
     $doc = $matched_docs[$i];
     echo "Dokumen #{$doc->id} (jumlah trigram cocok : {$doc->matched_trigrams_count}; skor : ".round($doc->score, 2).")\n";
