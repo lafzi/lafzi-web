@@ -2,6 +2,9 @@
 
 if (isset($_GET['q']) && $_GET['q'] != "") {
 
+    $order = ($_GET['order'] == 'on');
+    $vowel = ($_GET['vowel'] == 'on');
+    
     include '../search/search_ff.php';
     include '../lib/fonetik_id.php';
 
@@ -10,13 +13,18 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
 
     $query = $_GET['q'];
 
-    $query_final = id_fonetik($query, false);
+    $query_final = id_fonetik($query, !$vowel);
     $query_trigrams_count = strlen($query_final) - 2;
 
-    $term_list_filename = "../data/index_termlist_vokal.txt";
-    $post_list_filename = "../data/index_postlist_vokal.txt";
-
-    $matched_docs = & search($query_final, $term_list_filename, $post_list_filename); // using ff
+    if ($vowel) {
+        $term_list_filename = "../data/index_termlist_vokal.txt";
+        $post_list_filename = "../data/index_postlist_vokal.txt";
+    } else {
+        $term_list_filename = "../data/index_termlist_nonvokal.txt";
+        $post_list_filename = "../data/index_postlist_nonvokal.txt";
+    }
+    
+    $matched_docs = & search($query_final, $term_list_filename, $post_list_filename, $order); // using ff
 
     $num_doc_found = count($matched_docs);
     $quran_text = file("../data/quran_teks.txt", FILE_IGNORE_NEW_LINES);
@@ -44,6 +52,15 @@ header('Content-Type: text/html; charset=UTF-8');
             <form action="" method="get">
                 Cari : <input type="text" name="q" size="40" value="<?php if (isset($_GET['q'])) echo $_GET['q'] ?>"/>
                 <input type="submit" value="  Cari  "/>
+                <p>Pilihan</p>
+                <div>
+                    <input type="checkbox" id="os" name="order" <?php if(isset($order) && $order == true) echo 'checked="checked"' ?>/>
+                    <label for="os">Perhitungkan urutan <em>term</em></label>
+                </div>
+                <div>
+                    <input type="checkbox" id="vw" name="vowel" <?php if(isset($vowel) && $vowel == true) echo 'checked="checked"' ?>/>
+                    <label for="vw">Perhitungkan huruf vokal</label>
+                </div>
             </form>
         </div>
         <?php if (isset($_GET['q']) && $_GET['q'] != "") : ?>
@@ -77,16 +94,16 @@ header('Content-Type: text/html; charset=UTF-8');
                     echo '<div style="background-color: #CCCCCC; padding: 10px; margin-bottom: 10px;">';
                     
                     $doc = $matched_docs[$i];
-                    echo ($i + 1) . ". Dokumen #{$doc->id} (jumlah trigram cocok : {$doc->matched_trigrams_count}; skor : ".round($doc->score, 2).")\n";
+                    echo ($i + 1) . ". Dokumen #{$doc->id} (jumlah trigram cocok : {$doc->matched_trigrams_count}; skor jumlah trigram : ".round($doc->matched_terms_count_score,2) ."; skor keterurutan : ".round($doc->matched_terms_order_score,2) .";  skor total : ".round($doc->score, 2).")\n";
                     echo "<br/>";
                     
                     $doc_data = explode('|', $quran_text[$doc->id - 1]);
 
-                    echo '<small>';                    
+                    echo '<small><br/>';                    
                     echo "<em>";
                     echo "Surat {$doc_data[1]} ({$doc_data[0]}) ayat {$doc_data[2]}\n";
                     echo "</em><br/>";
-                    
+
                     echo "Posisi kemunculan : ".  implode(',', array_values($doc->matched_terms))."\n\n";
                     echo '</small>';
                     

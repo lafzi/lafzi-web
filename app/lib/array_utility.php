@@ -5,6 +5,11 @@
 // return : skor
 function array_order_score(array $array) {
     
+    // for single and double element array
+    $c = count($array);
+    if ($c == 1) return 1;
+    if ($c == 2) return ($array[0] < $array[1]) ? 2 : 1;
+    
     // return LIS length / count
     return LIS_length($array) / count($array);
     

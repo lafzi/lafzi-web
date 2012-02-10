@@ -9,10 +9,10 @@ include '../lib/fonetik.php';
 include '../lib/trigram.php';
 
 // parameter
-$doc_file = "../data/fonetik_vokal.txt";
+$doc_file = "../data/fonetik.txt";
 
-$term_list_file    = "../data/index_termlist_vokal.txt";
-$posting_list_file = "../data/index_postlist_vokal.txt";
+$term_list_file    = "../data/index_termlist_nonvokal.txt";
+$posting_list_file = "../data/index_postlist_nonvokal.txt";
 
 // fase I : mengekstrak seluruh term dari seluruh dokumen dan membangun indeks
 echo "Fase I \n\n"; 
