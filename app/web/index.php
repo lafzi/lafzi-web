@@ -94,7 +94,11 @@ header('Content-Type: text/html; charset=UTF-8');
                     echo '<div style="background-color: #CCCCCC; padding: 10px; margin-bottom: 10px;">';
                     
                     $doc = $matched_docs[$i];
-                    echo ($i + 1) . ". Dokumen #{$doc->id} (jumlah trigram cocok : {$doc->matched_trigrams_count}; skor jumlah trigram : ".round($doc->matched_terms_count_score,2) ."; skor keterurutan : ".round($doc->matched_terms_order_score,2) .";  skor total : ".round($doc->score, 2).")\n";
+                    if ($order)
+                        echo ($i + 1) . ". Dokumen #{$doc->id} (jumlah trigram cocok : {$doc->matched_trigrams_count}; skor jumlah trigram : ".round($doc->matched_terms_count_score,2) ."; skor keterurutan : ".round($doc->matched_terms_order_score,2)."; skor kedekatan : ".round($doc->matched_terms_contiguity_score,2).";  skor total : ".round($doc->score, 2).")\n";
+                    else
+                        echo ($i + 1) . ". Dokumen #{$doc->id} (jumlah trigram cocok : {$doc->matched_trigrams_count}; skor jumlah trigram : ".round($doc->matched_terms_count_score,2) ."; skor total : ".round($doc->score, 2).")\n";
+                            
                     echo "<br/>";
                     
                     $doc_data = explode('|', $quran_text[$doc->id - 1]);
@@ -105,6 +109,10 @@ header('Content-Type: text/html; charset=UTF-8');
                     echo "</em><br/>";
 
                     echo "Posisi kemunculan : ".  implode(',', array_values($doc->matched_terms))."\n\n";
+
+                    if ($order)
+                        echo "<br/>LIS : ".  implode(',', $doc->LIS)."\n\n";
+                    
                     echo '</small>';
                     
                     echo "<br/><br/>";
