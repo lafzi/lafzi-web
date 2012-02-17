@@ -133,3 +133,17 @@ function array_diff_sum($array) {
     return array_sum($diff);
 }
 
+// menghitung rata-rata resiprokal dari interval elemen array berdampingan
+// param  : $array of integer
+// return : rata-rata interval resiprokal
+function reciprocal_diff_average($array) {
+    
+    $diff = array();
+    $len = count($array);
+    
+    for ($i = 0; $i < $len-1; $i++) {
+        $diff[] = 1 / ($array[$i+1] - $array[$i]);
+    }
+    
+    return array_sum($diff) / ($len-1);
+}

@@ -72,7 +72,7 @@ function search($query_final, $term_list_filename, $post_list_filename, $score_o
             
             $LIS = LIS_sequence(array_values($doc_found->matched_terms));
             $doc_found->LIS = $LIS;
-            $doc_found->matched_terms_contiguity_score = (count($LIS) - 1) / array_diff_sum($LIS);
+            $doc_found->matched_terms_contiguity_score = reciprocal_diff_average($LIS);
             
             $doc_found->score = $doc_found->matched_terms_order_score * $doc_found->matched_terms_contiguity_score;            
         }

@@ -21,7 +21,6 @@ function id_fonetik($string, $tanpa_vokal = true) {
     $string = id_substitusi_idgham($string);
     $string = id_fonetik_2_konsonan($string);
     $string = id_fonetik_1_konsonan($string);
-    $string = id_substitusi_syamsiyyah($string);
     $string = id_hilangkan_spasi($string);
     if ($tanpa_vokal) $string = id_hilangkan_vokal ($string);
     
@@ -119,8 +118,10 @@ function id_substitusi_idgham($string) {
     // pengecualian
     $string = str_replace("DUNYA", "DUN_YA", $string);
     $string = str_replace("BUNYAN", "BUN_YAN", $string);
-    $string = str_replace("QINWAN", "QIN_WAN", $string);
+    $string = str_replace("QINWAN", "KIN_WAN", $string);
+    $string = str_replace("KINWAN", "KIN_WAN", $string);
     $string = str_replace("SINWAN", "SIN_WAN", $string);
+    $string = str_replace("SHINWAN", "SIN_WAN", $string);
     
     // N,M,L,R,Y,W
     $string = preg_replace("/N\s?(N|M|L|R|Y|W)/", "$1", $string);
@@ -128,7 +129,7 @@ function id_substitusi_idgham($string) {
     // dikembalikan
     $string = str_replace("DUN_YA", "DUNYA", $string);
     $string = str_replace("BUN_YAN", "BUNYAN", $string);
-    $string = str_replace("QIN_WAN", "QINWAN", $string);
+    $string = str_replace("KIN_WAN", "KINWAN", $string);
     $string = str_replace("SIN_WAN", "SINWAN", $string);
     
     return $string;
@@ -158,18 +159,6 @@ function id_fonetik_1_konsonan($string) {
     $string = preg_replace("/'|`/", "X", $string);
     $string = preg_replace("/Q|K/", "K", $string);
     $string = preg_replace("/F|V|P/", "F", $string);
-    
-    return $string;
-    
-}
-
-// substitusi huruf syamsiyyah
-// param  : $string lafadz dalam teks latin
-// return : string dengan huruf syamsiyyah disesuaikan
-function id_substitusi_syamsiyyah($string) {
-    
-    // L + R,S,L,Z,N,D,T
-    $string = preg_replace("/L\s?(R|S|L|Z|N|D|T)/", "$1", $string);
     $string = preg_replace("/J|Z/", "Z", $string);
     
     return $string;
