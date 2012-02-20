@@ -141,6 +141,8 @@ function reciprocal_diff_average($array) {
     $diff = array();
     $len = count($array);
     
+    if ($len == 1) return 1;
+    
     for ($i = 0; $i < $len-1; $i++) {
         $diff[] = 1 / ($array[$i+1] - $array[$i]);
     }
