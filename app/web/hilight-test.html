@@ -1,0 +1,109 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test highlighting</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <style type="text/css">
+
+            .aya_container {
+                background-color: #EFEFEF; 
+                padding: 10px; 
+                margin-bottom: 10px;
+                position: relative;
+            }
+
+            .hl_container {
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                margin: 10px;
+                z-index: 50;
+                direction: rtl;
+                text-align: right;
+            }
+
+            .aya_text {
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                margin: 10px;                
+                z-index: 100;
+                text-align: right;
+                direction: rtl;
+                font-family: 'me_quran';
+                font-size: 25px;
+                line-height: 50px;
+                word-spacing: 2px;
+            }
+
+            .hl_block {
+                display: inline-block;
+                width: 8px;
+                height: 55px;
+                margin: 0px;
+                padding: 0px;
+            }
+
+            .on {
+                background-color: chartreuse;
+            }
+
+            .off {
+                background-color: transparent;
+            }
+
+        </style>
+
+        <script type="text/javascript">
+            
+            Array.max = function( array ){
+                return Math.max.apply( Math, array );
+            };
+            
+            function inArray(needle, haystack) {
+                var length = haystack.length;
+                for(var i = 0; i < length; i++) {
+                    if(haystack[i] == needle) return true;
+                }
+                return false;
+            }
+            
+            function generateHighlightRTL(occArray) {
+                max = Array.max(occArray);
+                for(var i = 1; i <= max; i++) {
+                    if(inArray(i, occArray)) {
+                        document.write("<div class='hl_block on'></div>");
+                    } else {
+                        document.write("<div class='hl_block off'></div>");
+                    }
+                }
+            }
+            
+        </script>
+    </head>
+    <body>
+        <div class="aya_container">
+            <div class="hl_container">
+                <script type="text/javascript">
+                    generateHighlightRTL([71,48,73,74,75,46,77,78,79,80,38,82,83,59,85,86,87,88,90,91]);
+                </script>
+            </div>
+            <div class="aya_text">
+                وَالسَّابِقُونَ الْأَوَّلُونَ مِنَ الْمُهَاجِرِينَ وَالْأَنْصَارِ وَالَّذِينَ اتَّبَعُوهُمْ بِإِحْسَانٍ رَضِيَ اللَّهُ عَنْهُمْ وَرَضُوا عَنْهُ وَأَعَدَّ لَهُمْ جَنَّاتٍ تَجْرِي تَحْتَهَا الْأَنْهَارُ خَالِدِينَ فِيهَا أَبَدًا ذَلِكَ الْفَوْزُ الْعَظِيمُ
+
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+        </div>
+    </body>
+</html>
