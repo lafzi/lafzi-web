@@ -90,6 +90,8 @@ header('Content-Type: text/html; charset=UTF-8');
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Pencarian</title>
+        <link rel="stylesheet" type="text/css" href="res/hilight.css"/>
+        <script type="text/javascript" src="res/hilight.js"></script>
     </head>
     <body>
         <h3>Pencarian fonetik (<em>lafadz</em>) Al-Quran</h3>
@@ -173,9 +175,18 @@ header('Content-Type: text/html; charset=UTF-8');
                         echo '</small>';
 
                         echo "<br/><br/>";
-                        echo '<div style="text-align: right; font-size: 25px">';
-                        echo $doc_data[3] . "\n\n";
-                        echo '</div>';
+                        
+                            echo '<div class="aya_container">';
+
+                                echo '<div class="hl_container"><script type="text/javascript">';
+                                echo "generateHighlightRTL([".implode(',', array_values($doc->matched_terms))."]);";
+                                echo '</script></div>';
+
+                                echo '<div class="aya_text">';
+                                echo $doc_data[3] . "\n\n";
+                                echo '</div>';
+
+                            echo '</div>';
 
                         echo '</div>';
                         

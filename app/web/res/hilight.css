@@ -1,0 +1,46 @@
+
+.aya_container {
+    background-color: #CCCCCC; 
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.hl_container {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    margin: 10px;
+    z-index: 50;
+    direction: rtl;
+    text-align: right;
+}
+
+.aya_text {
+    position: relative;
+    top: 0px;
+    right: 0px;
+    margin: 10px;                
+    z-index: 100;
+    text-align: right;
+    direction: rtl;
+    font-family: 'Arial';
+    font-size: 25px;
+    line-height: 50px;
+    word-spacing: 2px;
+}
+
+.hl_block {
+    display: inline-block;
+    width: 7px;
+    height: 40px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.on {
+    background-color: chartreuse;
+}
+
+.off {
+    background-color: transparent;
+}
