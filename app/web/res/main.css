@@ -1,0 +1,195 @@
+/* 
+    Document   : main
+    Created on : Feb 25, 2012, 4:46:36 PM
+    Author     : abrari
+    Description:
+*/
+
+html, body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    height: 100%;
+}
+
+body { 
+    font-family: 'Arial', sans-serif;
+    font-size: 15px;
+    background: #FFFFFF url('img/bg-green.jpg') top left repeat-x;
+    height: 100%;
+}
+
+#main-wrap {
+    width: 783px;
+    background: transparent url('img/bg-shadow.png') top left repeat-y;
+    margin: 0px auto;
+    padding: 0px;
+    height: 100%;
+}
+
+#main {
+    width: 720px;
+    background : #FFFFFF url('img/bg-dots.jpg') top left repeat-x;
+    margin: 0px auto;
+    padding: 15px;
+} 
+
+#main-logo {
+    text-align: center;
+    margin-top: 100px;
+    margin-bottom: 50px;
+}
+
+#search-form-container {
+    margin: 0px auto;
+    width : 620px;
+    background-color: #E5E5E5;
+    padding: 10px;
+    -moz-border-radius : 10px;
+    -webkit-border-radius : 10px;
+    text-align: center;
+    position: relative;
+}
+
+#search-form-container input:hover,
+#search-form-container input:focus {
+    -moz-box-shadow : 0px 0px 5px #327e00;
+    -webkit-box-shadow : 0px 0px 5px #327e00;    
+}
+
+#search-box {
+    display: inline-block;
+    width: 510px;
+    height: 35px !important;
+    overflow: hidden;
+    background: #FFFFFF url('img/input-bg.png') 0px 0px repeat-x;
+    border: 1px solid #AAAAAA;
+    border-right: none;
+    -moz-border-radius : 6px 0px 0px 6px;
+    -webkit-border-radius : 6px 0px 0px 6px;
+    padding: 0px;
+    padding-left: 5px;
+    font-size: 20px;
+    font-family: 'Arial', sans-serif;
+    outline : none;
+    color : #000000;
+    line-height: normal !important;
+    vertical-align: top;
+}
+
+#search-box.empty {
+    color : #CCCCCC;
+}
+
+#search-submit {
+    display: inline-block;
+    width: 100px;
+    height: 35px !important;
+    overflow: hidden;
+    background: #327e00 url('img/input-bg.png') 0px -51px repeat-x;
+    border: 1px solid #AAAAAA;
+    -moz-border-radius : 0px 6px 6px 0px;
+    -webkit-border-radius : 0px 6px 6px 0px;
+    padding: 0px;
+    font-size: 20px;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    outline : none;
+    color : #FFFFFF;
+    box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    -ms-box-sizing: content-box;
+    line-height: normal !important;
+    vertical-align: top;
+}
+
+#search-options-container {
+    margin: 0px auto;
+    width : 610px;
+    text-align: left;
+    position: relative;
+    font-size: 13px;
+}
+
+#search-options-container .search-option {
+    background-color: #E5E5E5;
+    border: none;
+    font-size: 13px;
+    font-family: 'Arial', sans-serif;
+    padding: 3px 7px;
+    margin: 0px;
+    margin-right: 3px;
+    color: #803300;
+    -moz-border-radius : 0px 0px 5px 5px;
+    -webkit-border-radius : 0px 0px 5px 5px;
+    box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    -ms-box-sizing: content-box;    
+    height: 23px;
+    vertical-align: top;
+}
+
+#search-options-container .search-option:hover {
+    background-color: #CCCCCC;
+}
+
+#search-checkboxes {
+    background-color: #E5E5E5;
+    border: none;
+    font-size: 13px;
+    font-family: 'Arial', sans-serif;
+    padding: 3px 7px;
+    margin: 0px;
+    margin-right: 3px;
+    color: #803300;
+    -moz-border-radius : 0px 0px 5px 5px;
+    -webkit-border-radius : 0px 0px 5px 5px;
+    height: 23px;
+    vertical-align: top;
+    display: none;
+}
+
+#search-help-box {
+    margin: 0px auto;
+    width : 590px;
+    text-align: left;
+    position: relative;
+    font-size: 13px;
+    padding: 10px;
+    border: 1px solid #CCCCCC;
+    margin-top: 5px;
+    display: none;
+    background-color: #fff6d5;
+    -moz-box-shadow : 1px 2px 5px #CCCCCC;
+    -webkit-box-shadow : 1px 2px 5px #CCCCCC;
+}
+
+#footer {
+    text-align: center;
+    position: absolute;
+    bottom: 0px;
+    width: 700px;
+    padding: 20px 10px;
+    border-top: 1px dashed #DDDDDD;
+}
+
+#footer #links {
+    color: #803300;
+}
+
+#footer #links a {
+    color: #803300;
+    text-decoration: none;
+}
+
+#footer #links a:hover {
+    text-decoration: underline;
+}
+
+#footer #copyleft {
+    font-size: 13px;
+    color: #666666;
+    margin-top: 5px;
+}
