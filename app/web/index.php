@@ -133,6 +133,7 @@ header('Content-Type: text/html; charset=UTF-8');
             </table>
 
             <div style="background-color: #CCCCCC; padding: 10px; margin-bottom: 10px; text-align: center">
+                <?php /*
                 Halaman : 
                 <!-- TODO : secure this -->
                 <input type="button" value="Sebelumnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" . ($page-1) ?>'" <?php if($page==1) echo 'disabled="disabled"' ?>/>
@@ -142,6 +143,10 @@ header('Content-Type: text/html; charset=UTF-8');
                     <?php endfor; ?>
                 </select>
                 <input type="button" value="Selanjutnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" . ($page+1) ?>'" <?php if($page==$num_pages-1) echo 'disabled="disabled"' ?>/>
+                 
+                */ ?>
+                <input type="checkbox" id="hl1" onchange="if(this.checked == true) showHilight(); else hideHilight();"/>
+                <label for="hl1">Tampilkan sorotan</label>
             </div>
             
             <?php
@@ -174,12 +179,14 @@ header('Content-Type: text/html; charset=UTF-8');
 
                         echo '</small>';
 
-                        echo "<br/><br/>";
+                        echo "<br/>";
+                        
+                        $hl_width = ($vowel) ? 8 : 14;
                         
                             echo '<div class="aya_container">';
 
                                 echo '<div class="hl_container"><script type="text/javascript">';
-                                echo "generateHighlightRTL([".implode(',', array_values($doc->matched_terms))."]);";
+                                echo "generateHighlightRTL([".implode(',', array_values($doc->matched_terms))."], {$hl_width});";
                                 echo '</script></div>';
 
                                 echo '<div class="aya_text">';

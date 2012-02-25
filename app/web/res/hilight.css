@@ -2,6 +2,7 @@
 .aya_container {
     background-color: #CCCCCC; 
     margin-bottom: 10px;
+    margin-top: 10px;
     position: relative;
 }
 
@@ -9,10 +10,11 @@
     position: absolute;
     top: 0px;
     right: 0px;
-    margin: 10px;
+    margin: 0px 10px;
     z-index: 50;
     direction: rtl;
     text-align: right;
+    visibility: hidden;
 }
 
 .aya_text {
@@ -31,10 +33,11 @@
 
 .hl_block {
     display: inline-block;
-    width: 7px;
-    height: 40px;
+/*    width: 7px;*/
+    height: 44px;
     margin: 0px;
     padding: 0px;
+    margin: 3px 0px;
 }
 
 .on {
