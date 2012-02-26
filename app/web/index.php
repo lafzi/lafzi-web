@@ -10,7 +10,7 @@
         <div id="main-wrap">
             <div id="main">
                 <div id="main-logo">
-                    <img src="res/img/logo.png" alt="Lafzi - Pencarian lafaz Quran"/>
+                    <img src="res/img/logo.png" alt="Lafzi - Pencarian lafaz Quran" width="394" height="172"/>
                 </div>
 
                 <form action="search.php" method="get" id="main-search-form">
@@ -23,9 +23,9 @@
                         <input type="button" class="search-option" value="Bantuan &raquo;" id="button-help"/>
                         <input type="button" class="search-option" value="Pengaturan &raquo;" id="button-option" title="Pengaturan tambahan"/>
                         <div id="search-checkboxes">
-                            <input type="checkbox" id="os" name="order"/>
+                            <input type="checkbox" id="os" name="order" checked="checked"/>
                             <label for="os">Perhitungkan keterurutan</label>
-                            <input type="checkbox" id="vw" name="vowel"/>
+                            <input type="checkbox" id="vw" name="vowel" checked="checked"/>
                             <label for="vw">Perhitungkan huruf vokal</label>
                         </div>                        
                     </div>
@@ -49,11 +49,11 @@
                     <div id="links">
                         <strong><a href="./">Lafzi</a></strong>
                         |
-                        <a href="about.php">About Lafzi</a>
+                        <a href="about.php">Tentang Lafzi</a>
                         |
-                        <a href="http://abrari.wordpress.com" target="_blank">Development Blog</a>
+                        <a href="http://abrari.wordpress.com/category/skripsi" target="_blank">Development Blog</a>
                         |
-                        <a href="http://code.google.com/p/pencarian-fonetik-quran" target="_blank">Source Code Repository</a>
+                        <a href="http://code.google.com/p/pencarian-fonetik-quran" target="_blank">Repositori Source Code</a>
                     </div>
                     <div id="copyleft">
                         Copyleft 2012 Computer Science IPB

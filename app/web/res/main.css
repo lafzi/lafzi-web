@@ -15,21 +15,24 @@ html, body {
 body { 
     font-family: 'Arial', sans-serif;
     font-size: 15px;
-    background: #FFFFFF url('img/bg-green.jpg') top left repeat-x;
     height: 100%;
+    padding: 0px 3px;
 }
 
 #main-wrap {
-    width: 783px;
-    background: transparent url('img/bg-shadow.png') top left repeat-y;
+    background : #FFFFFF url('img/bg-dots.png') top left repeat-x;
     margin: 0px auto;
     padding: 0px;
     height: 100%;
 }
 
+.bg-dots-light {
+    background : #FFFFFF url('img/bg-dots.png') top left repeat-x;
+    background-position: 0px -155px !important;
+}
+
 #main {
     width: 720px;
-    background : #FFFFFF url('img/bg-dots.jpg') top left repeat-x;
     margin: 0px auto;
     padding: 15px;
 } 
@@ -51,30 +54,32 @@ body {
     position: relative;
 }
 
+#search-form-container input {
+    display: inline-block;
+    height: 35px !important;
+    overflow: hidden;
+    border: 1px solid #AAAAAA;
+    font-size: 20px;
+    font-family: 'Arial', sans-serif;
+    outline : none;
+    line-height: normal !important;
+    vertical-align: top;
+}
+
 #search-form-container input:hover,
 #search-form-container input:focus {
-    -moz-box-shadow : 0px 0px 5px #327e00;
-    -webkit-box-shadow : 0px 0px 5px #327e00;    
+    border-color: #666666;
 }
 
 #search-box {
-    display: inline-block;
     width: 510px;
-    height: 35px !important;
-    overflow: hidden;
     background: #FFFFFF url('img/input-bg.png') 0px 0px repeat-x;
-    border: 1px solid #AAAAAA;
-    border-right: none;
+    border-right: none !important;
     -moz-border-radius : 6px 0px 0px 6px;
     -webkit-border-radius : 6px 0px 0px 6px;
     padding: 0px;
     padding-left: 5px;
-    font-size: 20px;
-    font-family: 'Arial', sans-serif;
-    outline : none;
     color : #000000;
-    line-height: normal !important;
-    vertical-align: top;
 }
 
 #search-box.empty {
@@ -82,26 +87,18 @@ body {
 }
 
 #search-submit {
-    display: inline-block;
+    border-bottom-color: #666666 !important;
     width: 100px;
-    height: 35px !important;
-    overflow: hidden;
     background: #327e00 url('img/input-bg.png') 0px -51px repeat-x;
-    border: 1px solid #AAAAAA;
     -moz-border-radius : 0px 6px 6px 0px;
     -webkit-border-radius : 0px 6px 6px 0px;
     padding: 0px;
-    font-size: 20px;
-    font-family: 'Arial', sans-serif;
     font-weight: bold;
-    outline : none;
     color : #FFFFFF;
     box-sizing: content-box;
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
     -ms-box-sizing: content-box;
-    line-height: normal !important;
-    vertical-align: top;
 }
 
 #search-options-container {
@@ -129,6 +126,9 @@ body {
     -ms-box-sizing: content-box;    
     height: 23px;
     vertical-align: top;
+    -webkit-transition: all .1s ease-in;
+    -moz-transition: all .1s ease-in;
+    -o-transition: all .1s ease-in;
 }
 
 #search-options-container .search-option:hover {
@@ -158,7 +158,7 @@ body {
     position: relative;
     font-size: 13px;
     padding: 10px;
-    border: 1px solid #CCCCCC;
+    border: 1px solid #BBBBBB;
     margin-top: 5px;
     display: none;
     background-color: #fff6d5;
@@ -172,7 +172,8 @@ body {
     bottom: 0px;
     width: 700px;
     padding: 20px 10px;
-    border-top: 1px dashed #DDDDDD;
+    border-top: 1px dashed #CCCCCC;
+    background-color: #FFFFFF;
 }
 
 #footer #links {
@@ -192,4 +193,26 @@ body {
     font-size: 13px;
     color: #666666;
     margin-top: 5px;
+}
+
+#header {
+    padding: 20px 10px;
+    border-bottom: 1px dashed #CCCCCC;
+    margin-bottom: 30px;
+}
+
+#header #logo-small {
+    float: left;
+    margin-right: 30px;
+    vertical-align: middle;
+}
+
+#header #title {
+    font-size: 30px;
+    color: #803300;
+    vertical-align: middle;
+    float: left;
+    padding: 0px;
+    margin: 0px;
+    margin-top: 10px;
 }

@@ -38,18 +38,6 @@
          id="stop4127" />
     </linearGradient>
     <linearGradient
-       inkscape:collect="always"
-       id="linearGradient4087">
-      <stop
-         style="stop-color:#ffffff;stop-opacity:1;"
-         offset="0"
-         id="stop4089" />
-      <stop
-         style="stop-color:#ffffff;stop-opacity:0;"
-         offset="1"
-         id="stop4091" />
-    </linearGradient>
-    <linearGradient
        id="linearGradient4073">
       <stop
          style="stop-color:#333333;stop-opacity:0.43076923;"
@@ -248,34 +236,6 @@
        x2="455.90707"
        y2="731.15894"
        gradientTransform="translate(-5e-7,-60)" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4073"
-       id="linearGradient4079"
-       x1="150"
-       y1="669.86218"
-       x2="135"
-       y2="669.86218"
-       gradientUnits="userSpaceOnUse" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4073"
-       id="linearGradient4083"
-       gradientUnits="userSpaceOnUse"
-       x1="150"
-       y1="669.86218"
-       x2="135"
-       y2="669.86218"
-       gradientTransform="translate(-1052.6244,0)" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4087"
-       id="linearGradient4093"
-       x1="510.5311"
-       y1="737.02344"
-       x2="510.5311"
-       y2="331.14413"
-       gradientUnits="userSpaceOnUse" />
     <filter
        inkscape:collect="always"
        id="filter4520">
@@ -313,8 +273,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.5"
-     inkscape:cx="154.43016"
-     inkscape:cy="363.59656"
+     inkscape:cx="344.31854"
+     inkscape:cy="516.73778"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -17363,6 +17323,16 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-308.2677)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect5033"
+       width="12"
+       height="453"
+       x="8"
+       y="314.36218"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <g
        id="g3812"
        style="font-size:66.11069489px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#4d4d4d;fill-opacity:1;stroke:none;filter:url(#filter3865);font-family:Droid Sans Arabic;-inkscape-font-specification:Droid Sans Arabic"
@@ -17398,39 +17368,6 @@
        d="m 210.89668,230.34322 0,30.78639 -4.86775,0 -5.63635,0 0,-18.36081 -5.46554,0 c -7.85121,2e-5 -11.78511,4.24109 -11.78508,12.72447 l 0,5.82849 c -3e-5,3.9844 -2.64256,5.97794 -7.92077,5.97794 l -5.48689,0 c -1.36735,0 -2.45789,-0.44154 -3.26652,-1.32369 -0.80865,-0.86746 -1.21694,-2.06575 -1.21694,-3.56541 0,-1.76431 0.22076,-3.68332 0.66185,-5.7858 l -3.37327,0 c -0.74983,2.02896 -1.13154,4.06239 -1.13154,6.10604 0,2.57296 0.74347,4.56649 2.19903,5.97794 1.45556,1.41144 3.5355,2.11362 6.25549,2.11363 l 5.35879,0 c 3.76384,-10e-6 6.68697,-0.84318 8.77476,-2.51927 2.10245,-1.6614 3.15974,-3.96876 3.15977,-6.93868 l 0,-5.7431 c -3e-5,-6.23388 2.68239,-9.35118 8.04887,-9.3512 l 1.17424,0 0,18.40351 9.6501,0 8.71071,0 0,-3.48001 c 1.20559,2.32301 2.74432,3.48001 4.61155,3.48001 l 18.23272,0 0,-2.58332 c 0.75028,1.54011 2.18567,2.37938 4.2913,2.54062 l 0,0.0427 27.15693,0 0.87534,0 9.32985,0 0,-34.33045 -4.01376,0 0,30.78639 -5.31609,0 -0.87534,0 -4.14186,0 0,-18.36081 -5.91389,0 c -3.76388,2e-5 -6.76012,1.03737 -9.00961,3.09571 -2.2348,2.05838 -3.35192,4.8671 -3.35192,8.45452 0,2.7935 0.76865,5.06098 2.32713,6.81058 l -6.87463,0 c -1.35267,10e-6 -2.4432,-0.36035 -3.26652,-1.11019 -0.80867,-0.76453 -1.21697,-1.76865 -1.21693,-2.98897 l 0,-3.26652 c -4e-5,-7.64533 -3.43781,-11.46481 -10.3333,-11.46483 -5.43997,2e-5 -9.61457,3.38462 -12.51097,10.1625 l 0,-22.11838 -3.84296,0 z m 13.68521,3.20247 c -1.5585,3e-5 -2.34849,0.84985 -2.34848,2.54062 -1e-5,1.67612 0.78998,2.5193 2.34848,2.51928 1.55845,2e-5 2.3271,-0.84316 2.32712,-2.51928 -2e-5,-1.69077 -0.76867,-2.54059 -2.32712,-2.54062 z m 32.94271,0 c -1.55849,3e-5 -2.32714,0.84985 -2.32712,2.54062 -2e-5,1.67612 0.76863,2.5193 2.32712,2.51928 1.57316,2e-5 2.36981,-0.84316 2.36983,-2.51928 -2e-5,-1.69077 -0.79667,-2.54059 -2.36983,-2.54062 z m -31.08528,12.34017 c 4.88124,2e-5 7.32295,2.69574 7.32297,8.09157 l 0,7.15218 -14.56055,0 c -2.51415,10e-6 -3.97974,-1.27665 -4.3767,-3.86431 3.11694,-7.58652 6.99765,-11.37942 11.61428,-11.37944 z m 32.68652,0.3843 1.92148,0 0,14.85945 -4.24861,0 c -4.11674,10e-6 -6.1701,-2.26747 -6.17009,-6.81058 -1e-5,-2.52883 0.73541,-4.50243 2.22038,-5.91389 1.48495,-1.42613 3.58625,-2.13496 6.27684,-2.13498 z m -86.91497,26.98613 c -1.55848,-10e-6 -2.34849,0.82846 -2.34847,2.51927 -2e-5,1.67608 0.78999,2.51926 2.34847,2.51927 1.57317,-10e-6 2.34846,-0.84319 2.34848,-2.51927 -2e-5,-1.69081 -0.77531,-2.51928 -2.34848,-2.51927 z m 6.89598,0 c -1.55849,-10e-6 -2.3485,0.82846 -2.34847,2.51927 -3e-5,1.67608 0.78998,2.51926 2.34847,2.51927 1.57316,-10e-6 2.34846,-0.84319 2.34848,-2.51927 -2e-5,-1.69081 -0.77532,-2.51928 -2.34848,-2.51927 z"
        id="path3013"
        inkscape:connector-curvature="0" />
-    <rect
-       style="fill:#44aa00;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="rect4059"
-       width="148.49242"
-       height="741.04785"
-       x="2.0660172"
-       y="309.90005"
-       ry="0"
-       inkscape:export-filename="/home/abrari/Desktop/mkp.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-    <rect
-       ry="0"
-       y="309.90005"
-       x="902.06604"
-       height="741.04785"
-       width="148.49242"
-       id="rect4069"
-       style="fill:#44aa00;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       inkscape:export-filename="/home/abrari/Desktop/mkp.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-    <rect
-       style="fill:url(#linearGradient4093);fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="rect4085"
-       width="1050.7606"
-       height="417.19299"
-       x="0"
-       y="328.3157"
-       transform="translate(0,308.2677)"
-       inkscape:export-filename="/home/abrari/Desktop/mkp.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
     <flowRoot
        xml:space="preserve"
        id="flowRoot4095"
@@ -17441,30 +17378,7 @@
            height="527.50165"
            x="851.35657"
            y="1.6323624" /></flowRegion><flowPara
-         id="flowPara4101" /></flowRoot>    <rect
-       ry="0"
-       y="309.90005"
-       x="135.00209"
-       height="741.04785"
-       width="15.556341"
-       id="rect4071"
-       style="fill:url(#linearGradient4079);fill-opacity:1;fill-rule:nonzero;stroke:none"
-       inkscape:export-filename="/home/abrari/Desktop/mkp.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-    <rect
-       style="fill:url(#linearGradient4083);fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="rect4081"
-       width="15.556341"
-       height="741.04785"
-       x="-917.62231"
-       y="309.90005"
-       ry="0"
-       transform="scale(-1,1)"
-       inkscape:export-filename="/home/abrari/Desktop/mkp.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-    <text
+         id="flowPara4101" /></flowRoot>    <text
        xml:space="preserve"
        style="font-size:15.21331882px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#803300;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
        x="534.49573"
@@ -17799,6 +17713,353 @@
        id="path6753"
        inkscape:connector-curvature="0"
        inkscape:export-filename="/home/abrari/Desktop/mkp.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path4851"
+       sodipodi:cx="15.202796"
+       sodipodi:cy="14.360283"
+       sodipodi:rx="4.2426405"
+       sodipodi:ry="4.2426405"
+       d="m 19.445436,14.360283 a 4.2426405,4.2426405 0 1 1 -8.485281,0 4.2426405,4.2426405 0 1 1 8.485281,0 z"
+       transform="matrix(0.70710681,0,0,0.70710681,3.2499994,313.20793)"
+       inkscape:tile-cx="14"
+       inkscape:tile-cy="15.094484"
+       inkscape:tile-w="6"
+       inkscape:tile-h="6"
+       inkscape:tile-x0="11"
+       inkscape:tile-y0="12.094484"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       id="use4973"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,12)"
+       opacity="0.97"
+       id="use4975"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,24)"
+       opacity="0.94"
+       id="use4977"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,36)"
+       opacity="0.91"
+       id="use4979"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,48)"
+       opacity="0.88"
+       id="use4981"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,60)"
+       opacity="0.85"
+       id="use4983"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,72)"
+       opacity="0.82"
+       id="use4985"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,84)"
+       opacity="0.79"
+       id="use4987"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,96)"
+       opacity="0.76"
+       id="use4989"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,108)"
+       opacity="0.73"
+       id="use4991"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,120)"
+       opacity="0.7"
+       id="use4993"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,132)"
+       opacity="0.67"
+       id="use4995"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,144)"
+       opacity="0.64"
+       id="use4997"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,156)"
+       opacity="0.61"
+       id="use4999"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,168)"
+       opacity="0.58"
+       id="use5001"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,180)"
+       opacity="0.55"
+       id="use5003"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,192)"
+       opacity="0.52"
+       id="use5005"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,204)"
+       opacity="0.49"
+       id="use5007"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,216)"
+       opacity="0.46"
+       id="use5009"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,228)"
+       opacity="0.43"
+       id="use5011"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,240)"
+       opacity="0.4"
+       id="use5013"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,252)"
+       opacity="0.37"
+       id="use5015"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,264)"
+       opacity="0.34"
+       id="use5017"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,276)"
+       opacity="0.31"
+       id="use5019"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,288)"
+       opacity="0.28"
+       id="use5021"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,300)"
+       opacity="0.25"
+       id="use5023"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,312)"
+       opacity="0.22"
+       id="use5025"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,324)"
+       opacity="0.19"
+       id="use5027"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,336)"
+       opacity="0.16"
+       id="use5029"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <use
+       x="0"
+       y="0"
+       inkscape:tiled-clone-of="#path4851"
+       xlink:href="#path4851"
+       transform="translate(0,348)"
+       opacity="0.13"
+       id="use5031"
+       inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
   </g>
