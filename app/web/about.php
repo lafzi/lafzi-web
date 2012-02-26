@@ -12,7 +12,7 @@
                 <div id="header">
                     <img src="res/img/logo-s.png" alt="Lafzi" id="logo-small" width="124" height="54"/>
                     <h1 id="title">
-                        Tentang Lafzi
+                        Lafzi - Tentang Lafzi
                     </h1>
                     <br style="clear: both"/>
                 </div>

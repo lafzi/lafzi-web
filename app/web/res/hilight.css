@@ -1,8 +1,8 @@
 
 .aya_container {
-    background-color: #CCCCCC; 
+/*    background-color: #CCCCCC;
     margin-bottom: 10px;
-    margin-top: 10px;
+    margin-top: 10px;   */
     position: relative;
 }
 
@@ -41,7 +41,7 @@
 }
 
 .on {
-    background-color: chartreuse;
+    background-color: #60f000;
 }
 
 .off {

@@ -11,6 +11,8 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
     $order = ($_GET['order'] == 'on');
     $vowel = ($_GET['vowel'] == 'on');
     
+    $verbose = isset($_GET['debug']);
+    
     include '../search/search_ff.php';
     include '../lib/fonetik_id.php';
 
@@ -82,149 +84,232 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
 
 }
 
-header('Content-Type: text/html; charset=UTF-8');
-
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Pencarian</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Lafzi - Hasil Pencarian</title>
         <link rel="stylesheet" type="text/css" href="res/hilight.css"/>
+        <link href="res/main.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="res/jquery.1.7.js"></script>        
         <script type="text/javascript" src="res/hilight.js"></script>
     </head>
     <body>
-        <h3>Pencarian fonetik (<em>lafadz</em>) Al-Quran</h3>
-        <div style="background-color: #CCCCCC; padding: 10px; margin-bottom: 20px;">
-            <form action="" method="get">
-                Cari : <input type="text" name="q" size="40" value="<?php if (isset($_GET['q'])) echo $_GET['q'] ?>"/>
-                <input type="submit" value="  Cari  "/>
-                <p>Pilihan</p>
-                <div>
-                    <input type="checkbox" id="os" name="order" <?php if(isset($order) && $order == true) echo 'checked="checked"' ?>/>
-                    <label for="os"><em>Ranking</em> keterurutan <em>term</em></label>
+        <div id="main-wrap" class="bg-dots-light">
+            <div id="main">    
+                
+                <div id="header">
+                    <img src="res/img/logo-s.png" alt="Lafzi" id="logo-small" width="124" height="54"/>
+
+                    <form action="" method="get" id="srp-search-form">
+
+                        <div id="search-form-container">
+                            <input type="text" name="q" id="search-box" value="<?php if (isset($_GET['q'])) echo $_GET['q'] ?>" autocomplete="off"/><input type="submit" value="Cari" id="search-submit"/>
+                        </div>
+
+                        <div id="search-options-container">
+                            <input type="button" class="search-option" value="Bantuan &raquo;" id="button-help"/>
+                            <input type="button" class="search-option" value="Pengaturan &raquo;" id="button-option" title="Pengaturan tambahan"/>
+                            <div id="search-checkboxes">
+                                <input type="checkbox" id="os" name="order" <?php if(isset($order) && $order == true) echo 'checked="checked"' ?>/>
+                                <label for="os">Perhitungkan keterurutan</label>
+                                <input type="checkbox" id="vw" name="vowel" <?php if(isset($vowel) && $vowel == true) echo 'checked="checked"' ?>/>
+                                <label for="vw">Perhitungkan huruf vokal</label>
+                            </div>                        
+                        </div>
+
+                    </form>
+
+                    <br style="clear: both"/>
+
+                    <div id="search-help-box" style="position: absolute; left : 180px; width: 500px; z-index: 200">
+                        Ketikkan potongan ayat atau lafaz dalam Al-Quran (tidak harus benar cara penulisannya), contoh:
+
+                        <ul>
+                            <li>alhamdulillahi rabbil-'alamin</li>
+                            <li>innalloha ma'a shoobiriin</li>
+                            <li>laa ilaaha illallaah</li>
+                            <li>kun fayakuun</li>
+                        </ul>
+
+                        Tips: Gunakan spasi untuk pemisah antar kata agar lebih akurat.
+                    </div>
                 </div>
-                <div>
-                    <input type="checkbox" id="vw" name="vowel" <?php if(isset($vowel) && $vowel == true) echo 'checked="checked"' ?>/>
-                    <label for="vw">Perhitungkan huruf vokal</label>
-                </div>
-            </form>
-        </div>
-        <?php if (isset($_GET['q']) && $_GET['q'] != "") : ?>
-        <div style="background-color: #EEEEEE; padding: 10px;">
-            <strong>Hasil pencarian</strong><br/>
-            <table>
-                <tr>
-                    <td>Query</td>
-                    <td>: <?php echo $query ?></td>
-                </tr>
-                <tr>
-                    <td>Kode fonetik</td>
-                    <td>: <?php echo $query_final ?></td>
-                </tr>
-                <tr>
-                    <td>Jumlah trigram query</td>
-                    <td>: <?php echo $query_trigrams_count ?></td>
-                </tr>
-                <tr>
-                    <td>Ditemukan</td>
-                    <td>: <?php echo $num_doc_found ?></td>
-                </tr>
-            </table>
+                
+                <?php if (isset($_GET['q']) && $_GET['q'] != "") : ?>
+                    <div id="srp-header">
+                        <h3>Hasil Pencarian (<?php echo number_format($num_doc_found) ?> hasil)</h3>
+                        <?php if($num_doc_found > 0) : ?>
+                        <div id="hl-switch" title="Tampilkan sorotan pada bagian yang kira-kira cocok">
+                            <input type="checkbox" id="hl1" onchange="if(this.checked == true) showHilight(); else hideHilight();"/>
+                            <label for="hl1">Tampilkan sorotan</label>
+                        </div>
+                        <?php endif; ?>
+                        <br style="clear: both"/>
 
-            <div style="background-color: #CCCCCC; padding: 10px; margin-bottom: 10px; text-align: center">
-                <?php /*
-                Halaman : 
-                <!-- TODO : secure this -->
-                <input type="button" value="Sebelumnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" . ($page-1) ?>'" <?php if($page==1) echo 'disabled="disabled"' ?>/>
-                <select name="page"  onchange='window.location = "<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" ?>" + this.value'>
-                    <?php for ($p = 1; $p < $num_pages; $p++) : ?>
-                    <option value="<?php echo $p ?>" <?php if($p == $page) echo 'selected="selected"' ?>><?php echo $p ?></option>
-                    <?php endfor; ?>
-                </select>
-                <input type="button" value="Selanjutnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" . ($page+1) ?>'" <?php if($page==$num_pages-1) echo 'disabled="disabled"' ?>/>
-                 
-                */ ?>
-                <input type="checkbox" id="hl1" onchange="if(this.checked == true) showHilight(); else hideHilight();"/>
-                <label for="hl1">Tampilkan sorotan</label>
-            </div>
-            
-            <?php
-            
-                for ($i = ($page-1)*$limit_per_page; $i < ($page-1)*$limit_per_page + $limit_per_page; $i++) {
-
-                    if (isset($matched_docs[$i])) {
-                    
-                        echo '<div style="background-color: #CCCCCC; padding: 10px; margin-bottom: 10px;">';
-
-                        $doc = $matched_docs[$i];
-                        if ($order)
-                            echo ($i + 1) . ". Dokumen #{$doc->id} (jumlah trigram cocok : {$doc->matched_trigrams_count}; skor jumlah trigram : ".round($doc->matched_terms_count_score,2) ."; skor keterurutan : ".round($doc->matched_terms_order_score,2)."; skor kedekatan : ".round($doc->matched_terms_contiguity_score,2).";  skor total : ".round($doc->score, 2).")\n";
-                        else
-                            echo ($i + 1) . ". Dokumen #{$doc->id} (jumlah trigram cocok : {$doc->matched_trigrams_count}; skor jumlah trigram : ".round($doc->matched_terms_count_score,2) ."; skor total : ".round($doc->score, 2).")\n";
-
-                        echo "<br/>";
-
-                        $doc_data = explode('|', $quran_text[$doc->id - 1]);
-
-                        echo '<small><br/>';                    
-                        echo "<em>";
-                        echo "Surat {$doc_data[1]} ({$doc_data[0]}) ayat {$doc_data[2]}\n";
-                        echo "</em><br/>";
-
-                        echo "Posisi kemunculan : ".  implode(',', array_values($doc->matched_terms))."\n\n";
-
-                        if ($order)
-                            echo "<br/>LIS : ".  implode(',', $doc->LIS)."\n\n";
-
-                        echo '</small>';
-
-                        echo "<br/>";
+                        <?php if($verbose) : ?>
+                        <table>
+                            <tr>
+                                <td>Query</td>
+                                <td>: <?php echo $query ?></td>
+                            </tr>
+                            <tr>
+                                <td>Kode fonetik</td>
+                                <td>: <?php echo $query_final ?></td>
+                            </tr>
+                            <tr>
+                                <td>Jumlah trigram query</td>
+                                <td>: <?php echo $query_trigrams_count ?></td>
+                            </tr>
+                            <tr>
+                                <td>Ditemukan</td>
+                                <td>: <?php echo $num_doc_found ?></td>
+                            </tr>
+                        </table>
+                        <?php endif; ?>
                         
-                        $hl_width = ($vowel) ? 8 : 14;
-                        
-                            echo '<div class="aya_container">';
+                    </div>
 
-                                echo '<div class="hl_container"><script type="text/javascript">';
-                                echo "generateHighlightRTL([".implode(',', array_values($doc->matched_terms))."], {$hl_width});";
-                                echo '</script></div>';
+                    <?php
 
-                                echo '<div class="aya_text">';
-                                echo $doc_data[3] . "\n\n";
+                        for ($i = ($page-1)*$limit_per_page; $i < ($page-1)*$limit_per_page + $limit_per_page; $i++) {
+
+                            if (isset($matched_docs[$i])) {
+
+                                $doc = $matched_docs[$i];
+                                
+                                if ($i%2 == 0)
+                                    echo '<div class="search-result-block">';
+                                else 
+                                    echo '<div class="search-result-block alt">';
+                                
+                                $doc_data = explode('|', $quran_text[$doc->id - 1]);
+
+                                echo "<div class='sura-name'>";
+                                echo "<div class='num'>".($i+1)."</div>";
+                                echo "Surat {$doc_data[1]} ({$doc_data[0]}) ayat {$doc_data[2]}";
+                                echo "</div>";
+
+                                if ($verbose) {
+                                    echo '<small style="color: #AAAAAA">';
+                                    if ($order)
+                                        echo "Dokumen #{$doc->id} (jumlah trigram cocok : {$doc->matched_trigrams_count}; skor jumlah trigram : ".round($doc->matched_terms_count_score,2) ."; skor keterurutan : ".round($doc->matched_terms_order_score,2)."; skor kedekatan : ".round($doc->matched_terms_contiguity_score,2).";  skor total : ".round($doc->score, 2).")\n";
+                                    else
+                                        echo "Dokumen #{$doc->id} (jumlah trigram cocok : {$doc->matched_trigrams_count}; skor jumlah trigram : ".round($doc->matched_terms_count_score,2) ."; skor total : ".round($doc->score, 2).")\n";
+                                    echo "<br/>";
+
+                                    echo "Posisi kemunculan : ".  implode(',', array_values($doc->matched_terms))."\n\n";
+                                    if ($order)
+                                        echo "<br/>LIS : ".  implode(',', $doc->LIS)."\n\n";
+                                    echo '</small>';
+                                }
+                                
+                                $hl_width = ($vowel) ? 8 : 14;
+
+                                    echo '<div class="aya_container">';
+
+                                        echo '<div class="hl_container"><script type="text/javascript">';
+                                        echo "generateHighlightRTL([".implode(',', array_values($doc->matched_terms))."], {$hl_width});";
+                                        echo '</script></div>';
+
+                                        echo '<div class="aya_text">';
+                                        echo $doc_data[3] . "\n\n";
+                                        echo '</div>';
+
+                                    echo '</div>';
+
                                 echo '</div>';
 
-                            echo '</div>';
+                            }
+                        }            
 
-                        echo '</div>';
-                        
+                    ?>
+
+                    <?php if($num_doc_found == 0) : ?>
+                    <p style="padding: 10px;">
+                        Tidak ada hasil. Barangkali kata kunci Anda terlalu pendek?
+                    </p>
+                    <?php endif; ?>
+                
+                    <?php if ($num_doc_found > 10) : ?>
+                    <div style="background-color: #CCCCCC; padding: 10px; margin-bottom: 10px; text-align: center">
+                        Halaman : 
+                        <!-- TODO : secure this -->
+                        <input type="button" value="Sebelumnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" . ($page-1) ?>'" <?php if($page==1) echo 'disabled="disabled"' ?>/>
+                        <select name="page"  onchange='window.location = "<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" ?>" + this.value'>
+                            <?php for ($p = 1; $p < $num_pages; $p++) : ?>
+                            <option value="<?php echo $p ?>" <?php if($p == $page) echo 'selected="selected"' ?>><?php echo $p ?></option>
+                            <?php endfor; ?>
+                        </select>
+                        <input type="button" value="Selanjutnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" . ($page+1) ?>'" <?php if($page==$num_pages-1) echo 'disabled="disabled"' ?>/>
+                    </div>            
+                    <?php endif; ?>
+
+                    <?php if ($verbose) {
+                        echo "\nPencarian dalam $time detik ";
+                        echo ($from_cache) ? '[cache hit]' : '[cache miss]';
+                        echo  "<br/>";
+                        echo "Memory usage      : " . memory_get_usage() . " bytes<br/>";
+                        echo "Memory peak usage : " . memory_get_peak_usage() . " bytes<br/>";
                     }
-                }            
-            
-            ?>
-            
-            <div style="background-color: #CCCCCC; padding: 10px; margin-bottom: 10px; text-align: center">
-                Halaman : 
-                <!-- TODO : secure this -->
-                <input type="button" value="Sebelumnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" . ($page-1) ?>'" <?php if($page==1) echo 'disabled="disabled"' ?>/>
-                <select name="page"  onchange='window.location = "<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" ?>" + this.value'>
-                    <?php for ($p = 1; $p < $num_pages; $p++) : ?>
-                    <option value="<?php echo $p ?>" <?php if($p == $page) echo 'selected="selected"' ?>><?php echo $p ?></option>
-                    <?php endfor; ?>
-                </select>
-                <input type="button" value="Selanjutnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" . ($page+1) ?>'" <?php if($page==$num_pages-1) echo 'disabled="disabled"' ?>/>
-            </div>            
-            
-            <p>
-                <?php
-                    echo "\nPencarian dalam $time detik ";
-                    echo ($from_cache) ? '[cache hit]' : '[cache miss]';
-                    echo  "<br/>";
-                    echo "Memory usage      : " . memory_get_usage() . " bytes<br/>";
-                    echo "Memory peak usage : " . memory_get_peak_usage() . " bytes<br/>";
-                ?>
-            </p>
-            
+                    ?>
+
+                <?php endif; ?>
+                
+                <div id="footer" <?php if($num_doc_found > 0) echo 'style="position: relative;"' ?>>
+                    <div id="links">
+                        <a href="./">Lafzi</a>
+                        |
+                        <a href="about.php">Tentang Lafzi</a>
+                        |
+                        <a href="http://abrari.wordpress.com/category/skripsi" target="_blank">Development Blog</a>
+                        |
+                        <a href="http://code.google.com/p/pencarian-fonetik-quran" target="_blank">Repositori Source Code</a>
+                    </div>
+                    <div id="copyleft">
+                        Copyleft 2012 Computer Science IPB
+                    </div>
+                </div>                
+                
+            </div>
         </div>
-        <?php endif; ?>
+        
+        <script type="text/javascript">
+            
+            var placeHolderText = "Ketikkan lafaz di sini";
+            
+            $(document).ready(function(){
+                
+                $('#search-box').focus(function(){
+                    if ($(this).val() == placeHolderText) {
+                        $(this).removeClass('empty');
+                        $(this).val('');
+                    }
+                });
+
+                $('#search-box').blur(function(){
+                    if ($(this).val() == '') {
+                        $(this).addClass('empty');
+                        $(this).val(placeHolderText);
+                    }
+                });
+                
+                $('#button-option').click(function(){
+                    $(this).hide(); 
+                    $('#search-checkboxes').css({display : 'inline-block'});
+                });
+
+                $('#button-help').click(function(){
+                    $('#search-help-box').slideToggle('fast');
+                });
+                
+                $('#srp-search-form').submit(function(){
+                    if($('#search-box').val() == placeHolderText || $('#search-box').val() == '')
+                        return false;
+                });
+
+            });
+        </script>        
+        
     </body>
 </html>
