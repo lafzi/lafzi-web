@@ -45,20 +45,7 @@
 
                 </form>
 
-                <div id="footer">
-                    <div id="links">
-                        <strong><a href="./">Lafzi</a></strong>
-                        |
-                        <a href="about.php">Tentang Lafzi</a>
-                        |
-                        <a href="http://abrari.wordpress.com/category/skripsi" target="_blank">Development Blog</a>
-                        |
-                        <a href="http://code.google.com/p/pencarian-fonetik-quran" target="_blank">Repositori Source Code</a>
-                    </div>
-                    <div id="copyleft">
-                        Copyleft 2012 Computer Science IPB
-                    </div>
-                </div>
+                <?php include 'footer.php'; ?>
 
             </div>
         </div>

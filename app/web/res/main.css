@@ -166,7 +166,7 @@ label {
     border: 1px solid #BBBBBB;
     margin-top: 5px;
     display: none;
-    background-color: #fff6d5;
+    background-color: #fff9d7;
     -moz-box-shadow : 1px 2px 5px #CCCCCC;
     -webkit-box-shadow : 1px 2px 5px #CCCCCC;
 }
@@ -234,7 +234,7 @@ label {
 
 .search-result-block {
     padding: 10px;
-    background-color: #F8F8F8;
+    background-color: #F4F4F4;
 }
 
 .alt {
@@ -244,6 +244,7 @@ label {
 .sura-name {
     font-weight: bold;
     color: #666666;
+    display: inline-block;
 }
 
 .sura-name .num {
@@ -251,6 +252,48 @@ label {
     display: inline-block;
     vertical-align: middle;
     margin-right: 20px;
+}
+
+.rel-bar {
+    float: right;
+    display: inline-block;
+    width: 170px;
+    font-size: 10px;
+    margin-top: 5px;
+    overflow: hidden;
+    color: #666666;
+}
+
+.rel-bar .relevance {
+    display: inline-block;
+    width: 30px;
+    overflow: hidden;
+    text-align: right;
+    padding-right: 3px;
+    vertical-align: middle;    
+}
+
+.rel-bar .relevance-bar {
+    display: inline-block;
+    width: 135px;
+    height: 4px;
+    background-color: #CCCCCC;
+    vertical-align: middle;    
+}
+
+.rel-bar .relevance-bar .fill {
+    display: inline-block;
+    height: 4px;
+    background-color: #327e00;
+}
+
+.pager {
+    background-color: #CCCCCC; 
+    padding: 10px; 
+    margin-bottom: 10px; 
+    text-align: center;
+    -webkit-border-radius : 0px 0px 10px 10px;
+    -moz-border-radius : 0px 0px 10px 10px;
 }
 
 /* Footer */

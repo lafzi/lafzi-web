@@ -99,7 +99,9 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
             <div id="main">    
                 
                 <div id="header">
+                    <a href="./">
                     <img src="res/img/logo-s.png" alt="Lafzi" id="logo-small" width="124" height="54"/>
+                    </a>
 
                     <form action="" method="get" id="srp-search-form">
 
@@ -171,6 +173,12 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                     </div>
 
                     <?php
+                    
+                        if (!$order) {
+                            $max_score = 1;
+                        } else {
+                            $max_score = $query_trigrams_count;
+                        }
 
                         for ($i = ($page-1)*$limit_per_page; $i < ($page-1)*$limit_per_page + $limit_per_page; $i++) {
 
@@ -189,6 +197,17 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                                 echo "<div class='num'>".($i+1)."</div>";
                                 echo "Surat {$doc_data[1]} ({$doc_data[0]}) ayat {$doc_data[2]}";
                                 echo "</div>";
+                                
+                                $percent_relevance = floor($doc->score / $max_score * 100);
+                                if ($percent_relevance == 0) $percent_relevance = 1;
+                                
+                                echo "<div class='rel-bar' title='Kecocokan {$percent_relevance}%'>";
+                                    echo "<div class='relevance'>{$percent_relevance}%</div>";
+                                    echo "<div class='relevance-bar'>";
+                                        echo "<div class='fill' style='width: {$percent_relevance}%'></div>";
+                                    echo "</div>";
+                                echo "</div>";
+                                
 
                                 if ($verbose) {
                                     echo '<small style="color: #AAAAAA">';
@@ -232,14 +251,14 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                     <?php endif; ?>
                 
                     <?php if ($num_doc_found > 10) : ?>
-                    <div style="background-color: #CCCCCC; padding: 10px; margin-bottom: 10px; text-align: center">
+                    <div class="pager">
                         Halaman : 
                         <!-- TODO : secure this -->
                         <input type="button" value="Sebelumnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" . ($page-1) ?>'" <?php if($page==1) echo 'disabled="disabled"' ?>/>
-                        <select name="page"  onchange='window.location = "<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" ?>" + this.value'>
-                            <?php for ($p = 1; $p < $num_pages; $p++) : ?>
+                        <select name="page" id="page-jump"  onchange='window.location = "<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" ?>" + this.value'>
+                            <?php /*for ($p = 1; $p < $num_pages; $p++) : ?>
                             <option value="<?php echo $p ?>" <?php if($p == $page) echo 'selected="selected"' ?>><?php echo $p ?></option>
-                            <?php endfor; ?>
+                            <?php endfor;*/ ?>
                         </select>
                         <input type="button" value="Selanjutnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" . ($page+1) ?>'" <?php if($page==$num_pages-1) echo 'disabled="disabled"' ?>/>
                     </div>            
@@ -256,20 +275,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
 
                 <?php endif; ?>
                 
-                <div id="footer" <?php if($num_doc_found > 0) echo 'style="position: relative;"' ?>>
-                    <div id="links">
-                        <a href="./">Lafzi</a>
-                        |
-                        <a href="about.php">Tentang Lafzi</a>
-                        |
-                        <a href="http://abrari.wordpress.com/category/skripsi" target="_blank">Development Blog</a>
-                        |
-                        <a href="http://code.google.com/p/pencarian-fonetik-quran" target="_blank">Repositori Source Code</a>
-                    </div>
-                    <div id="copyleft">
-                        Copyleft 2012 Computer Science IPB
-                    </div>
-                </div>                
+                <?php include 'footer.php'; ?>
                 
             </div>
         </div>
@@ -307,6 +313,19 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                     if($('#search-box').val() == placeHolderText || $('#search-box').val() == '')
                         return false;
                 });
+                
+                // mengisi dropdown pager
+                var pages = [];
+                var p;
+                var numPages = <?php echo $num_pages ?>;
+                var currPage = <?php echo $page ?>;
+                for (p = 1; p < numPages; p++) {
+                    if (p == currPage)
+                        pages.push('<option value="'+p+'" selected="selected">'+p+'</option>');
+                    else 
+                        pages.push('<option value="'+p+'">'+p+'</option>');
+                }
+                $('#page-jump').html(pages.join(''));
 
             });
         </script>        
