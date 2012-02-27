@@ -12,6 +12,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
     $vowel = ($_GET['vowel'] == 'on');
     
     $verbose = isset($_GET['debug']);
+    $filtered = !isset($_GET['all']);
     
     include '../search/search_ff.php';
     include '../lib/fonetik_id.php';
@@ -33,7 +34,8 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
     }
     
     $cache_file = "../cache/" . $query_final;
-    if ($order) $cache_file .= "_";
+    if ($order) $cache_file .= "_o";
+    if ($filtered) $cache_file .= "_f";
     
     if (file_exists($cache_file)) {
         // read from cache
@@ -46,7 +48,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
         
     } else {
         // do actual search
-        $matched_docs = & search($query_final, $term_list_filename, $post_list_filename, $order); // using ff
+        $matched_docs = & search($query_final, $term_list_filename, $post_list_filename, $order, $filtered); // using ff
         
         // write to cache
         $cf = fopen($cache_file, "w");
@@ -64,8 +66,8 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                 unlink("../cache/" . $old_cache);
             }
     }
-    
 
+    
     $num_doc_found = count($matched_docs);
     $quran_text = file("../data/quran_teks.txt", FILE_IGNORE_NEW_LINES);
 
@@ -274,6 +276,8 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                     ?>
 
                 <?php endif; ?>
+                
+                <p style="color: #AAAAAA; font-size: 11px;">Pencarian dalam <?php echo round($time, 2) ?> detik</p>
                 
                 <?php include 'footer.php'; ?>
                 

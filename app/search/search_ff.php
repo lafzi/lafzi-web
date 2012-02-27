@@ -12,7 +12,7 @@ include_once '../lib/doc_class.php';
 //          $post_list_filename nama file posting list
 //          $score_order true jika ingin menghitung keterurutan kemunculan term
 // return : array of found_doc object
-function search($query_final, $term_list_filename, $post_list_filename, $score_order = true) {
+function search($query_final, $term_list_filename, $post_list_filename, $score_order = true, $filtered = true) {
 
     // baca seluruh term list simpan dalam hashmap
     $term_hashmap = array();
@@ -64,6 +64,11 @@ function search($query_final, $term_list_filename, $post_list_filename, $score_o
         }
     }
 
+    
+    // diambil cuma yang 75% trigramnya cocok
+    $filtered_docs = array();
+    $min_score = 0.75 * (strlen($query_final) - 2);
+    
     // pemberian skor berdasarkan jumlah trigram yang sama dan keterurutan
     if ($score_order)
         foreach ($matched_docs as $doc_found) {
@@ -75,16 +80,25 @@ function search($query_final, $term_list_filename, $post_list_filename, $score_o
             $doc_found->matched_terms_contiguity_score = reciprocal_diff_average($LIS);
             
             $doc_found->score = $doc_found->matched_terms_order_score * $doc_found->matched_terms_contiguity_score;            
+
+            if ($filtered) if ($doc_found->matched_trigrams_count >= $min_score) $filtered_docs[] = $doc_found;
         }
     else
         foreach ($matched_docs as $doc_found) {
             $doc_found->matched_terms_count_score = $doc_found->matched_trigrams_count / $query_trigrams_count_all;
             $doc_found->score = $doc_found->matched_terms_count_score;
+            
+            if ($filtered) if ($doc_found->matched_trigrams_count >= $min_score) $filtered_docs[] = $doc_found;
         }
 
-    // urutkan berdasarkan doc->score
-    usort($matched_docs, 'matched_docs_cmp');
-
-    return $matched_docs;
+    if ($filtered) {
+        // urutkan berdasarkan doc->score
+        usort($filtered_docs, 'matched_docs_cmp');
+        return $filtered_docs;        
+    } else {
+        // urutkan berdasarkan doc->score
+        usort($matched_docs, 'matched_docs_cmp');
+        return $matched_docs;
+    }
     
 }
