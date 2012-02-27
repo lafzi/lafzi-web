@@ -174,6 +174,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                         
                     </div>
 
+                    <div id="srb-container">
                     <?php
                     
                         if (!$order) {
@@ -245,6 +246,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                         }            
 
                     ?>
+                    </div>
 
                     <?php if($num_doc_found == 0) : ?>
                     <p style="padding: 10px;">
@@ -277,7 +279,9 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
 
                 <?php endif; ?>
                 
+                <?php if($num_doc_found > 0) : ?>
                 <p style="color: #AAAAAA; font-size: 11px;">Pencarian dalam <?php echo round($time, 2) ?> detik</p>
+                <?php endif; ?>
                 
                 <?php include 'footer.php'; ?>
                 
@@ -330,6 +334,13 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                         pages.push('<option value="'+p+'">'+p+'</option>');
                 }
                 $('#page-jump').html(pages.join(''));
+                
+                var srbHeight = $('#srb-container').height();
+                var vpHeight = $(window).height();
+                
+                if (srbHeight < (vpHeight - 250)) {
+                    $('#footer').css({position : 'absolute'});
+                }
 
             });
         </script>        
