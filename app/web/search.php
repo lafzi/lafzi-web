@@ -16,6 +16,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
     
     include '../search/search_ff.php';
     include '../lib/fonetik_id.php';
+    include '../lib/fonetik.php';
 
     // profiling
     $time_start = microtime(true);
@@ -145,7 +146,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                         <h3>Hasil Pencarian (<?php echo number_format($num_doc_found) ?> hasil)</h3>
                         <?php if($num_doc_found > 0) : ?>
                         <div id="hl-switch" title="Tampilkan sorotan pada bagian yang kira-kira cocok">
-                            <input type="checkbox" id="hl1" onchange="if(this.checked == true) showHilight(); else hideHilight();"/>
+                            <input type="checkbox" id="hl1" checked="checked" onchange="if(this.checked == true) showHilight(); else hideHilight();"/>
                             <label for="hl1">Tampilkan sorotan</label>
                         </div>
                         <?php endif; ?>
@@ -183,6 +184,8 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                             $max_score = $query_trigrams_count;
                         }
 
+                        $js_hl_functions = "";
+                        
                         for ($i = ($page-1)*$limit_per_page; $i < ($page-1)*$limit_per_page + $limit_per_page; $i++) {
 
                             if (isset($matched_docs[$i])) {
@@ -205,15 +208,15 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                                 if ($percent_relevance == 0) $percent_relevance = 1;
                                 
                                 echo "<div class='rel-bar' title='Kecocokan {$percent_relevance}%'>";
-                                    echo "<div class='relevance'>{$percent_relevance}%</div>";
-                                    echo "<div class='relevance-bar'>";
-                                        echo "<div class='fill' style='width: {$percent_relevance}%'></div>";
-                                    echo "</div>";
+                                echo     "<div class='relevance'>{$percent_relevance}%</div>";
+                                echo     "<div class='relevance-bar'>";
+                                echo         "<div class='fill' style='width: {$percent_relevance}%'></div>";
+                                echo     "</div>";
                                 echo "</div>";
                                 
 
                                 if ($verbose) {
-                                    echo '<small style="color: #AAAAAA">';
+                                    echo '<br/><br/><small style="color: #AAAAAA">';
                                     if ($order)
                                         echo "Dokumen #{$doc->id} (jumlah trigram cocok : {$doc->matched_trigrams_count}; skor jumlah trigram : ".round($doc->matched_terms_count_score,2) ."; skor keterurutan : ".round($doc->matched_terms_order_score,2)."; skor kedekatan : ".round($doc->matched_terms_contiguity_score,2).";  skor total : ".round($doc->score, 2).")\n";
                                     else
@@ -226,22 +229,48 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                                     echo '</small>';
                                 }
                                 
-                                $hl_width = ($vowel) ? 8 : 14;
+                                // memetakan posisi kemunculan untuk highlighting
+                                $posisi_real = array();
+                                $posisi_hilight = array();
+                                $map_posisi = map_reduksi_ke_asli($doc_data[3], !$vowel);
 
-                                    echo '<div class="aya_container">';
+                                if ($order)
+                                    foreach ($doc->LIS as $pos) {
+                                        $posisi_real[] = $map_posisi[$pos-1];
+                                    }
+                                else
+                                    foreach (array_values($doc->matched_terms) as $pos) {
+                                        $posisi_real[] = $map_posisi[$pos-1];
+                                    }
 
-                                        echo '<div class="hl_container"><script type="text/javascript">';
-                                        echo "generateHighlightRTL([".implode(',', array_values($doc->matched_terms))."], {$hl_width});";
-                                        echo '</script></div>';
+                                $posisi_hilight = longest_highlight_lookforward($posisi_real);
 
-                                        echo '<div class="aya_text">';
-                                        echo $doc_data[3] . "\n\n";
-                                        echo '</div>';
+                                // to JS array
+                                $js_array_str = "";
+                                foreach ($posisi_hilight as $pos) {
+                                    $js_array_str .= ",[";
+                                    $js_array_str .= $pos[0] . ',' . $pos[1];
+                                    $js_array_str .= "]";
+                                }
+                                $js_array_str = substr($js_array_str, 1);
+                                $js_array_str = "[" . $js_array_str . "]";
+                                
+                                echo     '<div class="aya_container">';
 
-                                    echo '</div>';
+                                echo         '<div class="aya_text" id="aya_res_'.$i.'">';
+                                echo         $doc_data[3] . "\n\n";                                        
+                                echo         '</div>';
+                                
+                                echo     '<script type="text/javascript">';
+                                echo     'hilightTo("aya_res_'.$i.'", '.$js_array_str.');';
+                                echo     '</script>';
+                                
+                                echo     '</div>';
 
                                 echo '</div>';
 
+                                $js_hl_functions .= "hilightTo('aya_res_$i', $js_array_str);"; 
+                                
                             }
                         }            
 
@@ -343,6 +372,17 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                 }
 
             });
+            
+            function hideHilight() {
+                $('.aya_text').each(function(){
+                    $(this).html($(this).text());
+                });
+            }
+            
+            function showHilight() {
+                <?php echo $js_hl_functions ?>
+            }
+            
         </script>        
         
     </body>

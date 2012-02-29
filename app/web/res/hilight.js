@@ -1,3 +1,5 @@
+/* koding lama 
+
 Array.max = function( array ){
     return Math.max.apply( Math, array );
 };
@@ -51,9 +53,22 @@ function showHilight() {
     }
 }
 
-function hideHilight() {
-    hls = getElementsByClassName(document, 'hl_container');    
-    for (var i = 0; i < hls.length; i++) {
-        hls[i].style.visibility = 'hidden';
+*/
+
+String.prototype.splice = function( idx, rem, s ) {
+    return (this.slice(0,idx) + s + this.slice(idx + Math.abs(rem)));
+};
+
+function hilightTo(elementId, posArray) {
+    var text = document.getElementById(elementId).innerHTML;
+    var startPos, endPos;
+
+    for (var i = posArray.length-1; i >= 0; i--) {
+        startPos = posArray[i][0];
+        endPos   = posArray[i][1] + 2;
+        text     = text.splice(endPos, 0, "</span>"); 
+        text     = text.splice(startPos, 0, "&#x200d;<span class='hl_block'>"); 
     }
+    
+    document.getElementById(elementId).innerHTML = text;
 }

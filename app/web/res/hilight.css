@@ -27,23 +27,10 @@
     direction: rtl;
     font-family: 'Arial';
     font-size: 25px;
-    line-height: 50px;
-    word-spacing: 2px;
+    line-height: 40px;
+    word-spacing: 5px;
 }
 
 .hl_block {
-    display: inline-block;
-/*    width: 7px;*/
-    height: 44px;
-    margin: 0px;
-    padding: 0px;
-    margin: 3px 0px;
-}
-
-.on {
     background-color: #fdf499;
-}
-
-.off {
-    background-color: transparent;
 }

@@ -432,3 +432,161 @@ echo ar_fonetik($ar_string, false);
 echo "\n\n";
 
  */
+
+// tambahan untuk highlighting hasil pencarian
+
+function ar_reduksi($ar_string, $hilangkan_vokal = false) {
+    
+   $ar_string = ar_hilangkan_spasi($ar_string);
+   $ar_string = ar_hilangkan_tasydid($ar_string);
+   $ar_string = ar_gabung_huruf_mati($ar_string);
+   $ar_string = ar_akhir_ayat($ar_string);
+   $ar_string = ar_substitusi_tanwin($ar_string);
+   $ar_string = ar_hilangkan_mad($ar_string);
+   $ar_string = ar_hilangkan_huruf_tidak_dibaca($ar_string);
+   $ar_string = ar_substitusi_iqlab($ar_string);
+   $ar_string = ar_substitusi_idgham($ar_string);
+
+   $ar_string = mb_ereg_replace(SUKUN, "", $ar_string);
+   if ($hilangkan_vokal) $ar_string = ar_hilangkan_harakat($ar_string);
+   
+   return $ar_string;
+   
+}
+
+/* kita cobain...
+ 
+$ar = 
+"قَالُوا تَاللَّهِ تَفْتَأُ تَذْكُرُ يُوسُفَ حَتَّى تَكُونَ حَرَضًا أَوْ تَكُونَ مِنَ الْهَالِكِينَ"
+;
+
+//echo $ar . "\n";
+echo ar_reduksi($ar) . "\n";
+echo ar_fonetik($ar, false) . "\n\n";
+
+$k = ar_string_to_array(ar_reduksi($ar));
+
+echo count($k) . "\n";
+echo strlen(ar_fonetik($ar, false)) . "\n";
+*/
+
+// comparer
+function cmp_ph($r, $a) {
+    
+    return
+        ($r == $a)
+        ||
+        ($r == DHAMMAH && $a == DHAMMATAIN)     // para tanwin
+        ||
+        ($r == KASRAH && $a == KASRATAIN)
+        ||
+        ($r == FATHAH && $a == FATHATAIN)
+        ||
+        ($r == HAMZAH_ALIF_A && $a == ALIF_MAD)    // buat alif madda
+        ||
+        ($r == MIM && $a == NUN)    // buat iqlab
+    ;
+    
+}
+
+// ok, sudah sama, mari kita lanjut
+// memetakan posisi di string reduksi ke posisi di string asli
+function map_reduksi_ke_asli($str_asli, $hilangkan_vokal = false) {
+    
+    // catatan : tanwin jadi nun harus di-invers
+    
+    $str_reduksi = ar_reduksi($str_asli, $hilangkan_vokal);
+    
+    $reduksi = ar_string_to_array($str_reduksi);
+    $asli = ar_string_to_array($str_asli);
+    
+    $pos = array();
+    $len_red = count($reduksi);
+    $len_asli = count($asli);
+    
+    $j = 0;
+    
+    // untuk semua elemen reduksi
+    // i = pointer array reduksi
+    // j = pointer array asli
+    for ($i = 0; $i < $len_red; $i++) {
+        if ($asli[$j] == ALIF) { // kalau alif di depan
+            $pos[$i] = $j;
+            $pos[$i+1] = $j;
+            $i+=2;
+        }
+        while (!cmp_ph($reduksi[$i], $asli[$j]) && $j < $len_asli) {
+            if ($asli[$j] == DHAMMATAIN || $asli[$j] == KASRATAIN || $asli[$j] == FATHATAIN || $asli[$j] == ALIF_MAD) { // skip pointer buat tanwin dan alif madda
+                $pos[$i] = $j;
+                $i++;
+            }
+            $j++;
+        }
+        $pos[$i] = $j;
+    }
+    
+    return $pos;
+    
+}
+
+// merge posisi trigram untuk higlight
+/* misalnya begini
+ *      
+ *      0, 0, 1, 3, 4, 5, 6, 7, 20, 22, 24
+ * 
+ * di-lookforward sepanjang mungkin selama masuk 3 sekuens untuk higlight, jadi
+ * 
+ *       0 :  7+2
+ *      20 : 24+2
+ * 
+ */
+function longest_highlight_lookforward($hl_sequence, $min_length = 3) {
+
+    $len = count($hl_sequence);
+    if ($len == 1) return array(array($hl_sequence[0], $hl_sequence[0] + $min_length));
+    
+    sort($hl_sequence);
+    
+    $res = array();
+    $j = 1;
+    
+    for ($i=0; $i<$len; $i++) {        
+        while (isset($hl_sequence[$j]) && $hl_sequence[$j] - $hl_sequence[$j-1] <= $min_length+1 && $j < $len) {
+            $j++;
+        }
+        $res[] = array($hl_sequence[$i], $hl_sequence[$j-1] + $min_length);
+        $i = $j-1;
+        $j++;
+    }
+    
+    return $res;
+}
+
+// print_r(longest_highlight_lookforward(array(1, 2, 36, 4, 5, 6, 7)));
+
+/*
+
+$ar = 
+
+"الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ
+"
+
+;
+
+header("Content-Type: text/html;charset=UTF-8");
+
+echo "<table style='font-size: 20px'>";
+echo "<tr>";
+echo "<td valign='top' width='10%'><pre>";
+print_r(map_reduksi_ke_asli($ar, true));
+echo "</pre></td>";
+echo "<td valign='top' width='10%'><pre>";
+print_r(ar_string_to_array(ar_reduksi($ar, true)));
+echo "</pre></td>";
+echo "<td valign='top' width='10%'><pre>";
+print_r(ar_string_to_array($ar));
+echo "</pre></td>";
+echo "</tr>";
+echo "</table>";
+
+*/
