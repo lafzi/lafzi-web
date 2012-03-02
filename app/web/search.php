@@ -1,10 +1,10 @@
 <?php
 
 // visit log
-$lf = fopen("../log.txt", "a");
-$ls = date("Y-m-d H:i:s") . " : From " . $_SERVER['REMOTE_ADDR'] . " using " . $_SERVER['HTTP_USER_AGENT'] . "\n";
-fwrite($lf, $ls);
-fclose($lf);
+// $lf = fopen("../log.txt", "a");
+// $ls = date("Y-m-d H:i:s") . " : From " . $_SERVER['REMOTE_ADDR'] . " using " . $_SERVER['HTTP_USER_AGENT'] . "\n";
+// fwrite($lf, $ls);
+// fclose($lf);
 
 if (isset($_GET['q']) && $_GET['q'] != "") {
 
@@ -49,7 +49,23 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
         
     } else {
         // do actual search
-        $matched_docs = & search($query_final, $term_list_filename, $post_list_filename, $order, $filtered); // using ff
+        // pertama dengan threshold 0.8
+        $th = 0.8;
+        $matched_docs = & search($query_final, $term_list_filename, $post_list_filename, $order, $filtered, $th); 
+        
+        // jika ternyata tanpa hasil, turunkan threshold jadi 0.7
+        if(count($matched_docs) == 0) {
+            $th = 0.7;
+            $matched_docs = & search($query_final, $term_list_filename, $post_list_filename, $order, $filtered, $th); 
+        }
+
+        // jika ternyata tanpa hasil, turunkan threshold jadi 0.6
+        if(count($matched_docs) == 0) {
+            $th = 0.6;
+            $matched_docs = & search($query_final, $term_list_filename, $post_list_filename, $order, $filtered, $th); 
+        }
+        
+        // jika masih tanpa hasil, ya sudah
         
         // write to cache
         $cf = fopen($cache_file, "w");
@@ -71,7 +87,20 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
     
     $num_doc_found = count($matched_docs);
     $quran_text = file("../data/quran_teks.txt", FILE_IGNORE_NEW_LINES);
-
+    
+    // khusus ayat dengan fawatihussuwar
+    
+    $quran_text_muqathaat = file("../data/quran_muqathaat.txt", FILE_IGNORE_NEW_LINES);
+    $quran_text_muqathaat_map = array();
+    
+    foreach ($quran_text_muqathaat as $line) {
+        list ($no_surah, $nama_surah, $no_ayat, $teks) = explode('|', $line);
+        $quran_text_muqathaat_map[$no_surah][$no_ayat] = $teks;
+    }
+    
+//    header("Content-Type: text/html; charset=UTF-8");
+//    print_r($quran_text_muqathaat_map);exit;
+    
     // paging
     if (isset($_GET['page'])) 
         $page = intval($_GET['page']);
@@ -96,8 +125,10 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
         <link href="res/main.css" type="text/css" rel="stylesheet" />
         <script type="text/javascript" src="res/jquery.1.7.js"></script>        
         <script type="text/javascript" src="res/hilight.js"></script>
+        <script type="text/javascript" src="res/jquery.replacetext.js"></script>
     </head>
     <body>
+        <!-- <?php echo $th ?>  -->
         <div id="main-wrap" class="bg-dots-light">
             <div id="main">    
                 
@@ -233,18 +264,24 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                                 $posisi_real = array();
                                 $posisi_hilight = array();
                                 $map_posisi = map_reduksi_ke_asli($doc_data[3], !$vowel);
-
-                                if ($order)
-                                    foreach ($doc->LIS as $pos) {
-                                        $posisi_real[] = $map_posisi[$pos-1];
-                                    }
-                                else
-                                    foreach (array_values($doc->matched_terms) as $pos) {
-                                        $posisi_real[] = $map_posisi[$pos-1];
-                                    }
-
-                                $posisi_hilight = longest_highlight_lookforward($posisi_real);
-
+                                $seq = array();
+                                
+                                // pad by 3
+                                foreach (array_values($doc->matched_terms) as $pos) {
+                                    $seq[] = $pos;
+                                    $seq[] = $pos+1;
+                                    $seq[] = $pos+2;
+                                }
+                                $seq = array_unique($seq);
+                                foreach ($seq as $pos) {
+                                    $posisi_real[] = $map_posisi[$pos-1];
+                                }
+                                
+                                if ($vowel) 
+                                    $posisi_hilight = longest_highlight_lookforward($posisi_real, 3);
+                                else 
+                                    $posisi_hilight = longest_highlight_lookforward($posisi_real, 6);
+                                
                                 // to JS array
                                 $js_array_str = "";
                                 foreach ($posisi_hilight as $pos) {
@@ -254,16 +291,18 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                                 }
                                 $js_array_str = substr($js_array_str, 1);
                                 $js_array_str = "[" . $js_array_str . "]";
-                                
+
                                 echo     '<div class="aya_container">';
 
                                 echo         '<div class="aya_text" id="aya_res_'.$i.'">';
-                                echo         $doc_data[3] . "\n\n";                                        
-                                echo         '</div>';
                                 
-                                echo     '<script type="text/javascript">';
-                                echo     'hilightTo("aya_res_'.$i.'", '.$js_array_str.');';
-                                echo     '</script>';
+                                // if ayat mengandung muqathaat
+                                if (isset($quran_text_muqathaat_map[$doc_data[0]][$doc_data[2]])) {
+                                    echo     $quran_text_muqathaat_map[$doc_data[0]][$doc_data[2]];
+                                } else {
+                                    echo     $doc_data[3];  
+                                }
+                                echo         '</div>';
                                 
                                 echo     '</div>';
 
@@ -279,7 +318,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
 
                     <?php if($num_doc_found == 0) : ?>
                     <p style="padding: 10px;">
-                        Tidak ada hasil. Barangkali kata kunci Anda terlalu pendek?
+                        Tidak ada hasil. Pastikan lafaz yang dicari adalah lafaz pada Al-Quran.
                     </p>
                     <?php endif; ?>
                 
@@ -383,6 +422,8 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                 <?php echo $js_hl_functions ?>
             }
             
+            showHilight();
+
         </script>        
         
     </body>

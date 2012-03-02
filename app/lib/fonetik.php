@@ -554,7 +554,7 @@ function longest_highlight_lookforward($hl_sequence, $min_length = 3) {
         while (isset($hl_sequence[$j]) && $hl_sequence[$j] - $hl_sequence[$j-1] <= $min_length+1 && $j < $len) {
             $j++;
         }
-        $res[] = array($hl_sequence[$i], $hl_sequence[$j-1] + $min_length);
+        $res[] = array($hl_sequence[$i], $hl_sequence[$j-1]);
         $i = $j-1;
         $j++;
     }

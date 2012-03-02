@@ -17,6 +17,7 @@ function id_fonetik($string, $tanpa_vokal = true) {
     $string = id_gabung_vokal($string);
     $string = id_substitusi_diftong($string);
     $string = id_tandai_hamzah($string);
+    $string = id_substitusi_ikhfa($string);
     $string = id_substitusi_iqlab($string);
     $string = id_substitusi_idgham($string);
     $string = id_fonetik_2_konsonan($string);
@@ -94,6 +95,18 @@ function id_tandai_hamzah($string) {
     // UA, UI => UXA, UXI
     $string = preg_replace("/U(A|I)/", "UX$1", $string);    
     
+    return $string;
+    
+}
+
+// substitusi huruf ikhfa (NG)
+// param  : $string lafadz dalam teks latin
+// return : string dengan huruf ikhfa disesuaikan
+function id_substitusi_ikhfa($string) {
+    
+    // [vokal][NG][konsonan] => [vokal][N][konsonan]
+    $string = preg_replace("/(A|I|U)NG\s?(B|C|D|F|G|H|J|K|L|M|N|P|Q|R|S|T|V|W|X|Y|Z)/", "$1N$2", $string);
+
     return $string;
     
 }

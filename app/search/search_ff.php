@@ -12,7 +12,7 @@ include_once '../lib/doc_class.php';
 //          $post_list_filename nama file posting list
 //          $score_order true jika ingin menghitung keterurutan kemunculan term
 // return : array of found_doc object
-function search($query_final, $term_list_filename, $post_list_filename, $score_order = true, $filtered = true) {
+function search($query_final, $term_list_filename, $post_list_filename, $score_order = true, $filtered = true, $filter_threshold = 0.8) {
 
     // baca seluruh term list simpan dalam hashmap
     $term_hashmap = array();
@@ -65,9 +65,9 @@ function search($query_final, $term_list_filename, $post_list_filename, $score_o
     }
 
     
-    // diambil cuma yang 75% trigramnya cocok
+    // diambil cuma yang sekian % trigramnya cocok
     $filtered_docs = array();
-    $min_score = 0.75 * (strlen($query_final) - 2);
+    $min_score = $filter_threshold * (strlen($query_final) - 2);
     
     // pemberian skor berdasarkan jumlah trigram yang sama dan keterurutan
     if ($score_order)
