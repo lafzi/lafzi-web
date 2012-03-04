@@ -105,7 +105,7 @@ function id_tandai_hamzah($string) {
 function id_substitusi_ikhfa($string) {
     
     // [vokal][NG][konsonan] => [vokal][N][konsonan]
-    $string = preg_replace("/(A|I|U)NG\s?(B|C|D|F|G|H|J|K|L|M|N|P|Q|R|S|T|V|W|X|Y|Z)/", "$1N$2", $string);
+    $string = preg_replace("/(A|I|U)NG\s?(D|F|J|K|P|Q|S|T|V|Z)/", "$1N$2", $string);
 
     return $string;
     
@@ -156,8 +156,10 @@ function id_fonetik_2_konsonan($string) {
     
     $string = preg_replace("/KH|CH/", "H", $string);
     $string = preg_replace("/SH|TS|SY/", "S", $string);
-    $string = preg_replace("/ZH|DH|DZ/", "D", $string);
+    $string = preg_replace("/DH/", "D", $string);
+    $string = preg_replace("/ZH|DZ/", "Z", $string);
     $string = preg_replace("/TH/", "T", $string);
+    $string = preg_replace("/NG(A|I|U)/", "X$1", $string);  // mengatasi "ngalamin"
     $string = preg_replace("/GH/", "G", $string);
     
     return $string;

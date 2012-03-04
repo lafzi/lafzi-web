@@ -135,8 +135,8 @@ function ar_akhir_ayat($ar_string) {
         array_pop($arr);
         
     } else if($arr[$len-1] == FATHAH || $arr[$len-1] == KASRAH || $arr[$len-1] == DHAMMAH ||
-              $arr[$len-1] == KASRATAIN || $arr[$len-1] == DHAMMATAIN) {
-        // jika diakhiri tanda vokal / tanwin (kecuali fathatain)
+              $arr[$len-1] == KASRATAIN || $arr[$len-1] == DHAMMATAIN || $arr[$len-1] == FATHATAIN) {
+        // jika diakhiri tanda vokal / tanwin
         // ganti dengan sukun
         $arr[$len-1] = SUKUN;
     }
@@ -334,8 +334,10 @@ function ar_fonetik_encode($ar_string) {
     $str = "";
     
     $map = array(
-        JIM => "Z",
-        ZA  => "Z",
+        JIM  => "Z",
+        ZA   => "Z",
+        ZHA  => "Z",
+        DZAL => "Z",
         HHA => "H",
         KHA => "H",
         HA  => "H",
@@ -350,9 +352,7 @@ function ar_fonetik_encode($ar_string) {
         TSA  => "S",
         SYIN => "S",
         SIN  => "S",
-        ZHA  => "D",
         DHAD => "D",
-        DZAL => "D",
         DAL  => "D",
         TA_MARBUTAH  => "T",
         TA           => "T",

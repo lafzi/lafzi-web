@@ -17,6 +17,12 @@
     visibility: hidden;
 }
 
+@font-face
+{
+    font-family: Custom_Quran_Font;
+    src: url('me_quran.ttf');
+}
+
 .aya_text {
     position: relative;
     top: 0px;
@@ -25,7 +31,7 @@
     z-index: 100;
     text-align: right;
     direction: rtl;
-    font-family: 'Arial';
+    font-family: 'Custom_Quran_Font', 'Arial', sans-serif;
     font-size: 25px;
     line-height: 40px;
     word-spacing: 5px;
