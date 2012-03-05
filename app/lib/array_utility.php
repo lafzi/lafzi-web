@@ -149,3 +149,38 @@ function reciprocal_diff_average($array) {
     
     return array_sum($diff) / ($len-1);
 }
+
+// merge posisi trigram untuk higlight
+/* misalnya begini
+ *      
+ *      0, 0, 1, 3, 4, 5, 6, 7, 20, 22, 24
+ * 
+ * di-lookforward sepanjang mungkin selama masuk 3 sekuens untuk higlight, jadi
+ * 
+ *       0 :  7+2
+ *      20 : 24+2
+ * 
+ */
+function longest_highlight_lookforward($hl_sequence, $min_length = 3) {
+
+    $len = count($hl_sequence);
+    if ($len == 1) return array(array($hl_sequence[0], $hl_sequence[0] + $min_length));
+    
+    sort($hl_sequence);
+    
+    $res = array();
+    $j = 1;
+    
+    for ($i=0; $i<$len; $i++) {        
+        while (isset($hl_sequence[$j]) && $hl_sequence[$j] - $hl_sequence[$j-1] <= $min_length+1 && $j < $len) {
+            $j++;
+        }
+        $res[] = array($hl_sequence[$i], $hl_sequence[$j-1]);
+        $i = $j-1;
+        $j++;
+    }
+    
+    return $res;
+}
+
+// print_r(longest_highlight_lookforward(array(1, 2, 36, 4, 5, 6, 7)));

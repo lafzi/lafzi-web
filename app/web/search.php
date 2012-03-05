@@ -34,6 +34,20 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
         $post_list_filename = "../data/index_postlist_nonvokal.txt";
     }
     
+    // baca data teks quran untuk ditampilkan
+    
+    $quran_text = file("../data/quran_teks.txt", FILE_IGNORE_NEW_LINES);
+    
+    // khusus ayat dengan fawatihussuwar
+    
+    $quran_text_muqathaat = file("../data/quran_muqathaat.txt", FILE_IGNORE_NEW_LINES);
+    $quran_text_muqathaat_map = array();
+    
+    foreach ($quran_text_muqathaat as $line) {
+        list ($no_surah, $nama_surah, $no_ayat, $teks) = explode('|', $line);
+        $quran_text_muqathaat_map[$no_surah][$no_ayat] = $teks;
+    }    
+    
     $cache_file = "../cache/" . $query_final;
     if ($order) $cache_file .= "_o";
     if ($filtered) $cache_file .= "_f";
@@ -41,6 +55,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
     if (file_exists($cache_file)) {
         // read from cache
         $cf = fopen($cache_file, "r");
+        exec("touch " . $cache_file);
         
         $matched_docs = unserialize(fgets($cf));
         fclose($cf);
@@ -67,40 +82,76 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
         
         // jika masih tanpa hasil, ya sudah
         
-        // write to cache
-        $cf = fopen($cache_file, "w");
-        fwrite($cf, serialize($matched_docs));
-        fclose($cf);
+        if(count($matched_docs) > 0) {
+        
+            // penandaan posisi untuk highlight
 
-        $from_cache = false;    
-        
-        // clean cache except 50 newest; linux only
-        $old_caches = array();
-        exec("ls -t ../cache/ | sed -e '1,50d'", $old_caches);
-        
-        if (count($old_caches) > 0)
-            foreach ($old_caches as $old_cache) {
-                unlink("../cache/" . $old_cache);
+            // baca file posisi mapping
+            if ($vowel)
+                $mapping_data = file('../data/mapping_posisi_vokal.txt', FILE_IGNORE_NEW_LINES);
+            else 
+                $mapping_data = file('../data/mapping_posisi.txt', FILE_IGNORE_NEW_LINES);
+
+            foreach ($matched_docs as $doc) {
+
+                list(,,,$doc_text) = explode('|', $quran_text[$doc->id - 1]);
+                $doc_text = ar_string_to_array($doc_text);
+
+                // memetakan posisi kemunculan untuk highlighting
+                $posisi_real = array();
+                $posisi_hilight = array();
+                $map_posisi = explode(',', $mapping_data[$doc->id - 1] );
+                $seq = array();
+
+                // pad by 3
+                foreach (array_values($doc->matched_terms) as $pos) {
+                    $seq[] = $pos;
+                    $seq[] = $pos+1;
+                    $seq[] = $pos+2;
+                }
+                $seq = array_unique($seq);
+                foreach ($seq as $pos) {
+                    $posisi_real[] = $map_posisi[$pos-1];
+                }
+
+                if ($vowel) 
+                    $doc->highlight_positions = longest_highlight_lookforward($posisi_real, 3);
+                else 
+                    $doc->highlight_positions = longest_highlight_lookforward($posisi_real, 6);
+
+                // penambahan bobot jika penandaan berakhir pada karakter spasi
+                $end_pos = end($doc->highlight_positions);
+                $end_pos = $end_pos[1];
+
+                if ($doc_text[$end_pos+2] == ' ' || !isset($doc_text[$end_pos+2])) $doc->score += 0.003;
+                else if ($doc_text[$end_pos+3] == ' ' || !isset($doc_text[$end_pos+3])) $doc->score += 0.002;
+                else if ($doc_text[$end_pos+4] == ' ' || !isset($doc_text[$end_pos+4])) $doc->score += 0.001;
+
             }
+
+            // diurutkan ulang
+            usort($matched_docs, 'matched_docs_cmp');
+                        
+            // write to cache
+            $cf = fopen($cache_file, "w");
+            fwrite($cf, serialize($matched_docs));
+            fclose($cf);
+
+            $from_cache = false;    
+
+            // clean cache except 50 newest; linux only
+            $old_caches = array();
+            exec("ls -t ../cache/ | sed -e '1,50d'", $old_caches);
+
+            if (count($old_caches) > 0)
+                foreach ($old_caches as $old_cache) {
+                    unlink("../cache/" . $old_cache);
+                }
+        }
     }
 
-    
     $num_doc_found = count($matched_docs);
-    $quran_text = file("../data/quran_teks.txt", FILE_IGNORE_NEW_LINES);
-    
-    // khusus ayat dengan fawatihussuwar
-    
-    $quran_text_muqathaat = file("../data/quran_muqathaat.txt", FILE_IGNORE_NEW_LINES);
-    $quran_text_muqathaat_map = array();
-    
-    foreach ($quran_text_muqathaat as $line) {
-        list ($no_surah, $nama_surah, $no_ayat, $teks) = explode('|', $line);
-        $quran_text_muqathaat_map[$no_surah][$no_ayat] = $teks;
-    }
-    
-//    header("Content-Type: text/html; charset=UTF-8");
-//    print_r($quran_text_muqathaat_map);exit;
-    
+        
     // paging
     if (isset($_GET['page'])) 
         $page = intval($_GET['page']);
@@ -130,6 +181,9 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
     <body>
         <!-- <?php echo $th ?>  -->
         <div id="main-wrap" class="bg-dots-light">
+            <div style="position: absolute; top: 0px; left: 0px; width: 100%; text-align: center; padding: 6px 0px; background-color: #fff9d7; border-bottom: 1px solid #CCCCCC; font-size: 13px">
+            Kami mengharapkan bantuan Anda untuk mengisi kuesioner untuk keperluan penelitian aplikasi ini. <a href="../form" target="_blank">Klik di sini</a> untuk ikut berpartisipasi.
+            </div>        
             <div id="main">    
                 
                 <div id="header">
@@ -245,52 +299,30 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                                 echo     "</div>";
                                 echo "</div>";
                                 
-
-                                if ($verbose) {
-                                    echo '<br/><br/><small style="color: #AAAAAA">';
-                                    if ($order)
-                                        echo "Dokumen #{$doc->id} (jumlah trigram cocok : {$doc->matched_trigrams_count}; skor jumlah trigram : ".round($doc->matched_terms_count_score,2) ."; skor keterurutan : ".round($doc->matched_terms_order_score,2)."; skor kedekatan : ".round($doc->matched_terms_contiguity_score,2).";  skor total : ".round($doc->score, 2).")\n";
-                                    else
-                                        echo "Dokumen #{$doc->id} (jumlah trigram cocok : {$doc->matched_trigrams_count}; skor jumlah trigram : ".round($doc->matched_terms_count_score,2) ."; skor total : ".round($doc->score, 2).")\n";
-                                    echo "<br/>";
-
-                                    echo "Posisi kemunculan : ".  implode(',', array_values($doc->matched_terms))."\n\n";
-                                    if ($order)
-                                        echo "<br/>LIS : ".  implode(',', $doc->LIS)."\n\n";
-                                    echo '</small>';
-                                }
-                                
-                                // memetakan posisi kemunculan untuk highlighting
-                                $posisi_real = array();
-                                $posisi_hilight = array();
-                                $map_posisi = map_reduksi_ke_asli($doc_data[3], !$vowel);
-                                $seq = array();
-                                
-                                // pad by 3
-                                foreach (array_values($doc->matched_terms) as $pos) {
-                                    $seq[] = $pos;
-                                    $seq[] = $pos+1;
-                                    $seq[] = $pos+2;
-                                }
-                                $seq = array_unique($seq);
-                                foreach ($seq as $pos) {
-                                    $posisi_real[] = $map_posisi[$pos-1];
-                                }
-                                
-                                if ($vowel) 
-                                    $posisi_hilight = longest_highlight_lookforward($posisi_real, 3);
-                                else 
-                                    $posisi_hilight = longest_highlight_lookforward($posisi_real, 6);
-                                
                                 // to JS array
                                 $js_array_str = "";
-                                foreach ($posisi_hilight as $pos) {
+                                foreach ($doc->highlight_positions as $pos) {
                                     $js_array_str .= ",[";
                                     $js_array_str .= $pos[0] . ',' . $pos[1];
                                     $js_array_str .= "]";
                                 }
                                 $js_array_str = substr($js_array_str, 1);
                                 $js_array_str = "[" . $js_array_str . "]";
+                                
+                                if ($verbose) {
+                                    echo '<br/><br/><small style="color: #AAAAAA">';
+                                    if ($order)
+                                        echo "Dokumen #{$doc->id} (jumlah trigram cocok : {$doc->matched_trigrams_count}; skor jumlah trigram : ".round($doc->matched_terms_count_score,2) ."; skor keterurutan : ".round($doc->matched_terms_order_score,2)."; skor kedekatan : ".round($doc->matched_terms_contiguity_score,2).";  skor total : ".round($doc->score, 4).")\n";
+                                    else
+                                        echo "Dokumen #{$doc->id} (jumlah trigram cocok : {$doc->matched_trigrams_count}; skor jumlah trigram : ".round($doc->matched_terms_count_score,2) ."; skor total : ".round($doc->score, 4).")\n";
+                                    echo "<br/>";
+
+                                    echo "Posisi kemunculan : ".  implode(',', array_values($doc->matched_terms))."<br/>";
+                                    if ($order)
+                                        echo "<br/>LIS : ".  implode(',', $doc->LIS)."<br/>";
+                                    echo "HL : " . $js_array_str;    
+                                    echo '</small>';
+                                }
 
                                 echo     '<div class="aya_container">';
 
@@ -328,9 +360,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                         <!-- TODO : secure this -->
                         <input type="button" value="Sebelumnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" . ($page-1) ?>'" <?php if($page==1) echo 'disabled="disabled"' ?>/>
                         <select name="page" id="page-jump"  onchange='window.location = "<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" ?>" + this.value'>
-                            <?php /*for ($p = 1; $p < $num_pages; $p++) : ?>
-                            <option value="<?php echo $p ?>" <?php if($p == $page) echo 'selected="selected"' ?>><?php echo $p ?></option>
-                            <?php endfor;*/ ?>
+                           
                         </select>
                         <input type="button" value="Selanjutnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" . ($page+1) ?>'" <?php if($page==$num_pages-1) echo 'disabled="disabled"' ?>/>
                     </div>            

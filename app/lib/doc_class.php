@@ -11,6 +11,7 @@ class found_doc {
     var $score = 0;
     var $matched_terms = array();
     var $LIS = array();
+    var $highlight_positions = array();
     
 }
 

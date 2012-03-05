@@ -8,6 +8,9 @@
     </head>
     <body>
         <div id="main-wrap">
+            <div style="position: absolute; top: 0px; left: 0px; width: 100%; text-align: center; padding: 6px 0px; background-color: #fff9d7; border-bottom: 1px solid #CCCCCC; font-size: 13px">
+            Kami mengharapkan bantuan Anda untuk mengisi kuesioner untuk keperluan penelitian aplikasi ini. <a href="../form" target="_blank">Klik di sini</a> untuk ikut berpartisipasi.
+            </div>
             <div id="main">
                 <div id="main-logo">
                     <img src="res/img/logo.png" alt="Lafzi - Pencarian lafaz Quran" width="394" height="172"/>

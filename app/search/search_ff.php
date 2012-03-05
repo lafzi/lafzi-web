@@ -64,7 +64,7 @@ function search($query_final, $term_list_filename, $post_list_filename, $score_o
         }
     }
 
-    
+
     // diambil cuma yang sekian % trigramnya cocok
     $filtered_docs = array();
     $min_score = $filter_threshold * (strlen($query_final) - 2);
@@ -73,9 +73,10 @@ function search($query_final, $term_list_filename, $post_list_filename, $score_o
     if ($score_order)
         foreach ($matched_docs as $doc_found) {
             $doc_found->matched_terms_count_score = $doc_found->matched_trigrams_count / $query_trigrams_count_all;
-            $doc_found->matched_terms_order_score = LIS_length(array_values($doc_found->matched_terms));
             
             $LIS = LIS_sequence(array_values($doc_found->matched_terms));
+            
+            $doc_found->matched_terms_order_score = count($LIS);
             $doc_found->LIS = $LIS;
             $doc_found->matched_terms_contiguity_score = reciprocal_diff_average($LIS);
             
