@@ -125,9 +125,8 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                 $end_pos = end($doc->highlight_positions);
                 $end_pos = $end_pos[1];
 
-                if ($doc_text[$end_pos+2] == ' ' || !isset($doc_text[$end_pos+2])) $doc->score += 0.003;
-                else if ($doc_text[$end_pos+3] == ' ' || !isset($doc_text[$end_pos+3])) $doc->score += 0.002;
-                else if ($doc_text[$end_pos+4] == ' ' || !isset($doc_text[$end_pos+4])) $doc->score += 0.001;
+                if ($doc_text[$end_pos+1] == ' ' || !isset($doc_text[$end_pos+1])) $doc->score += 0.003;
+                else if ($doc_text[$end_pos+2] == ' ' || !isset($doc_text[$end_pos+2])) $doc->score += 0.003;
 
             }
 

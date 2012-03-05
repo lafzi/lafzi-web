@@ -46,11 +46,11 @@ function id_substitusi_vokal($string) {
 // return : string tanpa konsonan sama berdampingan
 function id_gabung_konsonan($string) {
     
-    // gabung yang bergandengan langsung
-    $string = preg_replace("/(B|C|D|F|G|H|J|K|L|M|N|P|Q|R|S|T|V|W|X|Y|Z)\\1+/", "$1", $string);
-    
-    // gabung yang dipisahkan spasi
-    $string = preg_replace("/(B|C|D|F|G|H|J|K|L|M|N|P|Q|R|S|T|V|W|X|Y|Z)\s\\1/", "$1", $string);
+    // gabung yang bergandengan
+    $string = preg_replace("/(B|C|D|F|G|H|J|K|L|M|N|P|Q|R|S|T|V|W|X|Y|Z)\s?\\1+/", "$1", $string);
+
+    // untuk yang 2 konsonan (KH, SH, dst)
+    $string = preg_replace("/(KH|CH|SH|TS|SY|DH|TH|ZH|DZ|GH)\s?\\1+/", "$1", $string);
     
     return $string;
     
