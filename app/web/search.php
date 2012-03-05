@@ -48,6 +48,8 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
         $quran_text_muqathaat_map[$no_surah][$no_ayat] = $teks;
     }    
     
+    // sistem cache
+    
     $cache_file = "../cache/" . $query_final;
     if ($order) $cache_file .= "_o";
     if ($filtered) $cache_file .= "_f";
@@ -143,10 +145,11 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
             $old_caches = array();
             exec("ls -t ../cache/ | sed -e '1,50d'", $old_caches);
 
-            if (count($old_caches) > 0)
+            if (count($old_caches) > 0) {
                 foreach ($old_caches as $old_cache) {
                     unlink("../cache/" . $old_cache);
                 }
+            }
         }
     }
 
@@ -176,7 +179,6 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
         <link href="res/main.css" type="text/css" rel="stylesheet" />
         <script type="text/javascript" src="res/jquery.1.7.js"></script>        
         <script type="text/javascript" src="res/hilight.js"></script>
-        <script type="text/javascript" src="res/jquery.replacetext.js"></script>
     </head>
     <body>
         <!-- <?php echo $th ?>  -->
@@ -282,11 +284,11 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                                 else 
                                     echo '<div class="search-result-block alt">';
                                 
-                                $doc_data = explode('|', $quran_text[$doc->id - 1]);
-
+                                list($d_no_surat, $d_nama_surat, $d_no_ayat, $d_isi_teks) = explode('|', $quran_text[$doc->id - 1]);
+                                
                                 echo "<div class='sura-name'>";
                                 echo "<div class='num'>".($i+1)."</div>";
-                                echo "Surat {$doc_data[1]} ({$doc_data[0]}) ayat {$doc_data[2]}";
+                                echo "Surat {$d_nama_surat} ({$d_no_surat}) ayat {$d_no_ayat}";
                                 echo "</div>";
                                 
                                 $percent_relevance = floor($doc->score / $max_score * 100);
@@ -329,10 +331,10 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                                 echo         '<div class="aya_text" id="aya_res_'.$i.'">';
                                 
                                 // if ayat mengandung muqathaat
-                                if (isset($quran_text_muqathaat_map[$doc_data[0]][$doc_data[2]])) {
-                                    echo     $quran_text_muqathaat_map[$doc_data[0]][$doc_data[2]];
+                                if (isset($quran_text_muqathaat_map[$d_no_surat][$d_no_ayat])) {
+                                    echo     $quran_text_muqathaat_map[$d_no_surat][$d_no_ayat];
                                 } else {
-                                    echo     $doc_data[3];  
+                                    echo     $d_isi_teks;
                                 }
                                 echo         '</div>';
                                 
@@ -357,7 +359,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                     <?php if ($num_doc_found > 10) : ?>
                     <div class="pager">
                         Halaman : 
-                        <!-- TODO : secure this -->
+                        
                         <input type="button" value="Sebelumnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" . ($page-1) ?>'" <?php if($page==1) echo 'disabled="disabled"' ?>/>
                         <select name="page" id="page-jump"  onchange='window.location = "<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" ?>" + this.value'>
                            
