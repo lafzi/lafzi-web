@@ -125,8 +125,9 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                 $end_pos = end($doc->highlight_positions);
                 $end_pos = $end_pos[1];
 
-                if ($doc_text[$end_pos+1] == ' ' || !isset($doc_text[$end_pos+1])) $doc->score += 0.003;
-                else if ($doc_text[$end_pos+2] == ' ' || !isset($doc_text[$end_pos+2])) $doc->score += 0.003;
+                if ($doc_text[$end_pos+1] == ' ' || !isset($doc_text[$end_pos+1])) $doc->score += 0.001;
+                else if ($doc_text[$end_pos+2] == ' ' || !isset($doc_text[$end_pos+2])) $doc->score += 0.001;
+                else if ($doc_text[$end_pos+3] == ' ' || !isset($doc_text[$end_pos+3])) $doc->score += 0.001;
 
             }
 
@@ -264,11 +265,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                     <div id="srb-container">
                     <?php
                     
-                        if (!$order) {
-                            $max_score = 1;
-                        } else {
-                            $max_score = $query_trigrams_count;
-                        }
+                        $max_score = $query_trigrams_count;
 
                         $js_hl_functions = "";
                         

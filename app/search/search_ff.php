@@ -72,7 +72,7 @@ function search($query_final, $term_list_filename, $post_list_filename, $score_o
     // pemberian skor berdasarkan jumlah trigram yang sama dan keterurutan
     if ($score_order) {
         foreach ($matched_docs as $doc_found) {
-            $doc_found->matched_terms_count_score = $doc_found->matched_trigrams_count / $query_trigrams_count_all;
+            $doc_found->matched_terms_count_score = $doc_found->matched_trigrams_count;
             
             $LIS = LIS_sequence(array_values($doc_found->matched_terms));
             
@@ -86,7 +86,7 @@ function search($query_final, $term_list_filename, $post_list_filename, $score_o
         }
     } else {
         foreach ($matched_docs as $doc_found) {
-            $doc_found->matched_terms_count_score = $doc_found->matched_trigrams_count / $query_trigrams_count_all;
+            $doc_found->matched_terms_count_score = $doc_found->matched_trigrams_count;
             $doc_found->score = $doc_found->matched_terms_count_score;
             
             if ($filtered) if ($doc_found->matched_trigrams_count >= $min_score) $filtered_docs[] = $doc_found;

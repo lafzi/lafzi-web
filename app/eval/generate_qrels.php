@@ -1,11 +1,34 @@
 <?php
 
+include 'CSVDataSource.php';
+
 // membuat file qrels yang kompatibel dengan trec_eval
+/* param :
+ * 
+ *  folder  
+ *  
+ * 
+ * 
+ */
 
-$rel_judgment_filename = "rel_judgment_lafadz.txt";
-$qrels_target_filename = "trec_qrels.txt";
+$folder = $argv[1];
+if ($folder=="") exit("Specify a folder \n\n");
 
-$rel_judgment = file($rel_judgment_filename, FILE_IGNORE_NEW_LINES);
+$csvq = new File_CSV_DataSource($folder . '/queries.csv');
+$csvr = new File_CSV_DataSource($folder . '/rel_judgement.csv');
+
+$qs = $csvq->getHeaders();
+
+// buat folder, kalo udah ada hapus
+foreach ($qs as $qid) {
+    $qfolder = $folder . '/' . $qid;
+    if (is_dir($qfolder)) {
+        rrmdir($qfolder);
+        mkdir($qfolder);
+    } else {
+        mkdir($qfolder);
+    }
+}
 
 /*  Rel_info_file format: Standard 'qrels'
     Relevance for each docno to qid is determined from rel_info_file, which 
@@ -18,25 +41,48 @@ $rel_judgment = file($rel_judgment_filename, FILE_IGNORE_NEW_LINES);
     File may contain no NULL characters. 
 */
 
-$rj = fopen($qrels_target_filename, "w");
+foreach ($qs as $q_id) {
+    
+    $target_file = $folder . '/' . $q_id . '/qrel.txt';
+    $f = fopen($target_file, 'w');
+    
+    $variasi_query = $csvq->getColumn($q_id);
+    
+    $i = 1;
+    foreach ($variasi_query as $query) {
+        if ($query != '') {
+            $docno_relevan = $csvr->getColumn($q_id);
+            foreach ($docno_relevan as $doc_no) {
+                if ($doc_no != '') {
+                    $qid   = $q_id . '-' . $i;
+                    $iter  = '0';
+                    $docno = $doc_no;
+                    $rel   = '1';
 
-foreach ($rel_judgment as $line) {
-    
-    list($q, $rel_list) = explode("|", $line);
-    $q = str_replace(" ", "_", $q);
-    $rel_list = explode(",", $rel_list);
-    
-    echo $q . " : \n";
-    
-    foreach ($rel_list as $doc) {
-        
-        echo " - $doc \n";
-        
-        $qrels_line = "{$q}\t0\t{$doc}\t1\n";
-        fwrite($rj, $qrels_line);
-        
+                    $qrel_line = "$qid \t $iter \t $docno \t $rel \n";
+                    fwrite($f, $qrel_line);
+                }
+            }  
+            $i++;
+        }
     }
     
+    fclose($f);
 }
 
-fclose($rj);
+
+// recursive dir delete
+
+ function rrmdir($dir) { 
+   if (is_dir($dir)) { 
+     $objects = scandir($dir); 
+     foreach ($objects as $object) { 
+       if ($object != "." && $object != "..") { 
+         if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object); 
+       } 
+     } 
+     reset($objects); 
+     rmdir($dir); 
+   } 
+ }
+

@@ -157,8 +157,8 @@ function reciprocal_diff_average($array) {
  * 
  * di-lookforward sepanjang mungkin selama masuk 3 sekuens untuk higlight, jadi
  * 
- *       0 :  7+2
- *      20 : 24+2
+ *       0 :  7
+ *      20 : 24
  * 
  */
 function longest_highlight_lookforward($hl_sequence, $min_length = 3) {

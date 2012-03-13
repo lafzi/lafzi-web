@@ -9,7 +9,7 @@ include '../lib/fonetik.php';
 include '../lib/trigram.php';
 
 // parameter
-$bervokal = false;
+$bervokal = true;
 
 if ($bervokal) {
     $doc_file = "../data/fonetik_vokal.txt";
@@ -25,8 +25,8 @@ if ($bervokal) {
 
 }
 
-// fase I : mengekstrak seluruh term dari seluruh dokumen dan membangun indeks
-echo "Fase I \n\n"; 
+// tahap I : mengekstrak seluruh term dari seluruh dokumen dan membangun indeks
+echo "Tahap I ... "; 
  
 // baca seluruh dokumen
 $docs = file($doc_file);
@@ -41,10 +41,10 @@ $i = 1;
 // untuk setiap dokumen
 foreach ($docs as $doc) {
     
-    // dipeca pada karakter |
+    // dipecah pada karakter |
     list($id, $text) = explode("|", $doc);
     
-    echo "Memproses dokumen $id : ";
+    //echo "Memproses dokumen $id : ";
         
     // ekstrak trigram
     $trigrams = trigram_frekuensi_posisi($text);
@@ -59,19 +59,21 @@ foreach ($docs as $doc) {
         
     }
     
-    echo "OK\t";
-    echo "(". round($id/$docs_count*100) ."%)";
-    echo "\n";
+    //echo "OK\n";
+    //echo "(". round($id/$docs_count*100) ."%)";
+    //echo "\n";
     
     if ($i >= $limit) break;
     $i++;
     
 }
 
+echo "OK\n";
+
 unset($docs);
 
-// fase II : menulis inverted index
-echo "\nFase II \n\n";
+// tahap II : menulis inverted index
+echo "Tahap II ... ";
 
 // siapkan file untuk ditulisi
 $fh_index    = fopen($term_list_file, "w");
@@ -102,7 +104,7 @@ foreach ($index as $term => $postings) {
     
     $posting_list_string = implode(",", $posting_list);
  
-    echo "Menulis term $term ($df dokumen)\n";
+    //echo "Menulis term $term ($df dokumen)\n";
     
     // tulis ke file
     fwrite($fh_index, $term."|".$offset."\n");
@@ -117,8 +119,11 @@ unset($index);
 fclose($fh_index);
 fclose($fh_postlist);
 
+echo "OK\n";
+
 // hasil profiling waktu eksekusi
 $time_end = microtime(true);
 $time = $time_end - $time_start;
  
 echo "\nTerindeks dalam $time detik\n";
+echo "Memory peak usage : " . memory_get_peak_usage() . "\n\n";

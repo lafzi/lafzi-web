@@ -2,6 +2,9 @@
 
 // membuat korpus, versi flat file
 
+// profiling
+$time_start = microtime(true);
+
 error_reporting(E_ALL & ~E_NOTICE);
 
 include '../lib/fonetik.php';
@@ -57,3 +60,9 @@ fclose($fs);
 
 echo 'Total : ' . $count;
 echo "\n\n";
+
+// hasil profiling waktu eksekusi
+$time_end = microtime(true);
+$time = $time_end - $time_start;
+ 
+echo "\nDiproses dalam $time detik\n";
