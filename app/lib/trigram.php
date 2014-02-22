@@ -55,9 +55,45 @@ function trigram_frekuensi_posisi($string) {
     
 }
 
+function trigram_frekuensi_posisi_all($string) {
+    
+    $array = ekstrak_trigram($string);
+    $array_freq = array_count_values($array);
+    
+    $res = array();
+    
+    foreach ($array_freq as $trigram => $freq) {
+        
+        $pos = strpos_all($string, $trigram);
+        $res[$trigram] = array($freq, $pos);
+        
+    }
+    
+    return $res;
+    
+}
+
+
+function strpos_all($haystack,$needle){
+    $s=0;
+    $i=0;
+    while (is_integer($i)){        
+        $i = strpos($haystack,$needle,$s);
+        if (is_integer($i)) {
+            $aStrPos[] = $i+1;
+            $s = $i+strlen($needle);
+        }
+    }
+    if (isset($aStrPos)) {
+        return $aStrPos;
+    }
+    else {
+        return false;
+    }
+}
 
 // test suite
 
-// print_r(frekuensi_posisi_trigram_string("TESTTEST")); 
+// print_r(trigram_frekuensi_posisi_all("ALAAALAMANALALA")); 
  
 

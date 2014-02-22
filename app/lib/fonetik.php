@@ -76,7 +76,6 @@ function ar_fonetik($ar_string, $tanpa_harakat = true) {
 // return : string arabic tanpa spasi
 function ar_hilangkan_spasi($ar_string) {
     
-    // menggunakan regex lebih mudah
     return mb_ereg_replace("\s*", "", $ar_string);
     
 }
@@ -86,7 +85,6 @@ function ar_hilangkan_spasi($ar_string) {
 // return : string arabic tanpa tasydid/syaddah
 function ar_hilangkan_tasydid($ar_string) {
 
-    // menggunakan regex lebih mudah
     return mb_ereg_replace(SYADDAH, "", $ar_string);    
     
 }
@@ -277,7 +275,6 @@ function ar_hilangkan_huruf_tidak_dibaca($ar_string) {
 // return : string arabic dengan huruf iqlab disesuaikan
 function ar_substitusi_iqlab($ar_string) {
     
-    // dengan regex
     return mb_ereg_replace(NUN.SUKUN.BA, MIM.SUKUN.BA, $ar_string);        
     
 }

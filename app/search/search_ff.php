@@ -43,11 +43,13 @@ function search($query_final, $term_list_filename, $post_list_filename, $score_o
         if (isset($term_hashmap[$query_trigram])) {    
             // ambil posting list yang sesuai untuk trigram ini
             $post_list_file->fseek($term_hashmap[$query_trigram]);
-            $matched_posting_lists = explode(',', trim($post_list_file->current()));
+            $matched_posting_lists = explode(';', trim($post_list_file->current()));
 
             // untuk setiap posting list untuk trigram ini
             foreach ($matched_posting_lists as $data) {
                 list ($doc_id, $term_freq, $term_pos) = explode(':', $data);
+                $term_pos = explode(',', $term_pos);
+                //$term_pos = reset(explode(',', $term_pos));
 
                 // hitung jumlah kemunculan dll
                 if (isset($matched_docs[$doc_id])) {
@@ -58,14 +60,13 @@ function search($query_final, $term_list_filename, $post_list_filename, $score_o
                     $matched_docs[$doc_id]->id = $doc_id;
                 }
 
-                $matched_docs[$doc_id]->matched_terms[$query_trigram] = $term_pos;
+                $matched_docs[$doc_id]->matched_terms[$query_trigram] = $term_pos; // $term_pos is an array
             }
 
         }
     }
-
-
-    // diambil cuma yang sekian % trigramnya cocok
+    
+    // bila difilter, diambil cuma yang sekian % trigramnya cocok
     $filtered_docs = array();
     $min_score = $filter_threshold * (strlen($query_final) - 2);
     
@@ -74,7 +75,7 @@ function search($query_final, $term_list_filename, $post_list_filename, $score_o
         foreach ($matched_docs as $doc_found) {
             $doc_found->matched_terms_count_score = $doc_found->matched_trigrams_count;
             
-            $LIS = LIS_sequence(array_values($doc_found->matched_terms));
+            $LIS = longest_contiguous_subsequence(array_values_flatten($doc_found->matched_terms)); // LIS_sequence(array_values_flatten($doc_found->matched_terms));
             
             $doc_found->matched_terms_order_score = count($LIS);
             $doc_found->LIS = $LIS;

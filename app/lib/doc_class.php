@@ -18,7 +18,9 @@ class found_doc {
 // fungsi tambahan untuk pengurut array $matched_docs
 function matched_docs_cmp($el1, $el2) {
     
-    if ($el1->score == $el2->score) return 0;
+    if ($el1->score == $el2->score) {
+        return $el1->id - $el2->id;
+    }
     return $el1->score < $el2->score ? 1 : -1;
     
 }

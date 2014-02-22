@@ -4,13 +4,23 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Lafzi - Pencarian Lafaz Quran</title>
         <link href="res/main.css" type="text/css" rel="stylesheet" />
+        <link rel="shortcut icon" href="res/img/favicon.ico" type="image/x-icon" />
         <script type="text/javascript" src="res/jquery.1.7.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-41627176-1', 'ipb.ac.id');
+  ga('send', 'pageview');
+
+</script>
+
     </head>
     <body>
         <div id="main-wrap">
-            <div style="position: absolute; top: 0px; left: 0px; width: 100%; text-align: center; padding: 6px 0px; background-color: #fff9d7; border-bottom: 1px solid #CCCCCC; font-size: 13px">
-            Kami mengharapkan bantuan Anda untuk mengisi kuesioner untuk keperluan penelitian aplikasi ini. <a href="../form" target="_blank">Klik di sini</a> untuk ikut berpartisipasi.
-            </div>
             <div id="main">
                 <div id="main-logo">
                     <img src="res/img/logo.png" alt="Lafzi - Pencarian lafaz Quran" width="394" height="172"/>
@@ -26,9 +36,9 @@
                         <input type="button" class="search-option" value="Bantuan &raquo;" id="button-help"/>
                         <input type="button" class="search-option" value="Pengaturan &raquo;" id="button-option" title="Pengaturan tambahan"/>
                         <div id="search-checkboxes">
-                            <input type="checkbox" id="os" name="order" checked="checked"/>
-                            <label for="os">Perhitungkan keterurutan</label>
-                            <input type="checkbox" id="vw" name="vowel" checked="checked"/>
+                            <?php/*<input type="checkbox" id="os" name="order" checked="checked"/>
+                            <label for="os">Perhitungkan keterurutan</label>*/?>
+                            <input type="checkbox" id="vw" name="vowel" checked="checkes"/>
                             <label for="vw">Perhitungkan huruf vokal</label>
                         </div>                        
                     </div>
@@ -43,7 +53,7 @@
                             <li>kun fayakuun</li>
                         </ul>
 
-                        Tips: Gunakan spasi untuk pemisah antar kata agar lebih akurat.
+                        Tips: Gunakan spasi untuk pemisah antar-kata agar lebih akurat.
                     </div>
 
                 </form>

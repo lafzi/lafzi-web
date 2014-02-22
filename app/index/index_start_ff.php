@@ -9,7 +9,7 @@ include '../lib/fonetik.php';
 include '../lib/trigram.php';
 
 // parameter
-$bervokal = true;
+$bervokal = false;
 
 if ($bervokal) {
     $doc_file = "../data/fonetik_vokal.txt";
@@ -47,7 +47,7 @@ foreach ($docs as $doc) {
     //echo "Memproses dokumen $id : ";
         
     // ekstrak trigram
-    $trigrams = trigram_frekuensi_posisi($text);
+    $trigrams = trigram_frekuensi_posisi_all($text);
     
     foreach ($trigrams as $trigram => $fp) {
         
@@ -95,17 +95,13 @@ foreach ($index as $term => $postings) {
         
         // format id:frekuensi:posisi
         list($id, $freq, $pos) = $posting;
-        $posting_string = "$id:$freq:$pos";
+        $posting_string = "$id:$freq:" . implode(",", $pos);
         $posting_list[] = $posting_string;
         
     }
     
-    $df = count($postings);
-    
-    $posting_list_string = implode(",", $posting_list);
+    $posting_list_string = implode(";", $posting_list);
  
-    //echo "Menulis term $term ($df dokumen)\n";
-    
     // tulis ke file
     fwrite($fh_index, $term."|".$offset."\n");
     fwrite($fh_postlist, $posting_list_string."\n");

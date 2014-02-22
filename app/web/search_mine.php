@@ -8,20 +8,8 @@
 
 if (isset($_GET['q']) && $_GET['q'] != "") {
 
-    //if (isset($_GET['order'])) {
-	//$order = ($_GET['order'] == 'on');
-    //}
-    //else {
-	//$order = 0;
-    //}
-	$order = true;
-
-    if (isset($_GET['vowel'])) {
-	$vowel = ($_GET['vowel'] == 'on');
-    }
-    else {
-	$vowel = 0;
-    }
+    $order = true; //($_GET['order'] == 'on');
+    $vowel = ($_GET['vowel'] == 'on');
     
     $verbose  = isset($_GET['debug']);
     $filtered = !isset($_GET['all']);
@@ -81,18 +69,18 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
         // do actual search
         
         // pertama dengan threshold 0.8
-        $th = 0.95; //0.8;
+        $th = 0.8;
         $matched_docs = search($query_final, $term_list_filename, $post_list_filename, $order, $filtered, $th); 
         
         // jika ternyata tanpa hasil, turunkan threshold jadi 0.7
         if(count($matched_docs) == 0) {
-            $th = 0.8; //0.7;
+            $th = 0.7;
             $matched_docs = search($query_final, $term_list_filename, $post_list_filename, $order, $filtered, $th); 
         }
 
         // jika ternyata tanpa hasil, turunkan threshold jadi 0.6
         if(count($matched_docs) == 0) {
-            $th = 0.7; //0.6;
+            $th = 0.6;
             $matched_docs = search($query_final, $term_list_filename, $post_list_filename, $order, $filtered, $th); 
         }
         
@@ -142,8 +130,8 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                 $end_pos = $end_pos[1];
 
                 if ($doc_text[$end_pos+1] == ' ' || !isset($doc_text[$end_pos+1])) $doc->score += 0.001;
-                else if (!isset($doc_text[$end_pos+2]) || $doc_text[$end_pos+2] == ' ') $doc->score += 0.001;
-                else if (!isset($doc_text[$end_pos+3]) || $doc_text[$end_pos+3] == ' ') $doc->score += 0.001;
+                else if ($doc_text[$end_pos+2] == ' ' || !isset($doc_text[$end_pos+2])) $doc->score += 0.001;
+                else if ($doc_text[$end_pos+3] == ' ' || !isset($doc_text[$end_pos+3])) $doc->score += 0.001;
 
             }
 
@@ -192,25 +180,12 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Lafzi - Hasil Pencarian</title>
         <link rel="stylesheet" type="text/css" href="res/hilight.css"/>
-        <link rel="shortcut icon" href="res/img/favicon.ico" type="image/x-icon" />
         <link href="res/main.css" type="text/css" rel="stylesheet" />
         <script type="text/javascript" src="res/jquery.1.7.js"></script>        
         <script type="text/javascript" src="res/hilight.js"></script>
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-41627176-1', 'ipb.ac.id');
-  ga('send', 'pageview');
-
-</script>
-
     </head>
     <body>
-        <!-- <?php /*echo $th*/ ?>  -->
+        <!-- <?php echo $th ?>  -->
         <div id="main-wrap" class="bg-dots-light">
             <div id="main">    
                 
@@ -254,8 +229,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                     </div>
                 </div>
                 
-<?php if ($query_trigrams_count > 0 && $query_trigrams_count < 4) echo "Berikanlah  masukan yang lebih panjang agar hasil lebih akurat." ?>
-                <?php if (isset($_GET['q']) && $_GET['q'] != "" && $query_trigrams_count > 3) : ?>
+                <?php if (isset($_GET['q']) && $_GET['q'] != "") : ?>
                     <div id="srp-header">
                         <h3>Hasil Pencarian (<?php echo number_format($num_doc_found) ?> hasil)</h3>
                         <?php if($num_doc_found > 0) : ?>
@@ -291,7 +265,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
 
                     <div id="srb-container">
                     <?php
-if ($query_trigrams_count > 3) {                   
+                    
                         $max_score = $query_trigrams_count;
 
                         $js_hl_functions = "";
@@ -369,12 +343,7 @@ if ($query_trigrams_count > 3) {
                                 
                             }
                         }            
-}
-else
-{
-                                        echo "Masukkanlah lafaz yang lebih panjang agar hasil lebih akurat.";
 
-}
                     ?>
                     </div>
 
@@ -388,12 +357,11 @@ else
                     <div class="pager">
                         Halaman : 
                         
-                        <input type="button" value="Sebelumnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order=" . (isset($_GET['order']) ? $_GET['order'] : "off") ."&vowel=" . (isset($_GET['vowel']) ? $_GET['vowel'] : "off") . "&page=" . ($page-1) ?>'" <?php if($page==1) echo 'disabled="disabled"' ?>/>
-                
-                        <select name="page" id="page-jump"  onchange='window.location = "<?php echo "?q=" . urlencode($_GET['q']) . "&order=" . (isset($_GET['order']) ? $_GET['order'] : "off") ."&vowel=" . (isset($_GET['vowel']) ? $_GET['vowel'] : "off") . "&page=" ?>" + this.value'>
+                        <input type="button" value="Sebelumnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" . ($page-1) ?>'" <?php if($page==1) echo 'disabled="disabled"' ?>/>
+                        <select name="page" id="page-jump"  onchange='window.location = "<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" ?>" + this.value'>
                            
                         </select>
-                        <input type="button" value="Selanjutnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order=" . (isset($_GET['order']) ? $_GET['order'] : "off") ."&vowel=" . (isset($_GET['vowel']) ? $_GET['vowel'] : "off") . "&page=" . ($page+1) ?>'" <?php if($page==$num_pages-1) echo 'disabled="disabled"' ?>/>
+                        <input type="button" value="Selanjutnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order={$_GET['order']}&vowel={$_GET['vowel']}&page=" . ($page+1) ?>'" <?php if($page==$num_pages-1) echo 'disabled="disabled"' ?>/>
                     </div>            
                     <?php endif; ?>
 

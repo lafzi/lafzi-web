@@ -1,50 +1,9 @@
 <?php
 
-// fungsi untuk menghitung "skor keterurutan" dari array
-// param  : $array of integer yang dicari skornya
-// return : skor
-function array_order_score(array $array) {
-    
-    // for single and double element array
-    $c = count($array);
-    if ($c == 1) return 1;
-    if ($c == 2) return ($array[0] < $array[1]) ? 2 : 1;
-    
-    // return LIS length / count
-    return LIS_length($array) / count($array);
-    
-}
-
-// mencari panjang Longest Increasing Subsequences
-// algoritme Fredman (1975) dalam Liben-Nowell et al. (2006)
-// param  : $array of integer
-// return : panjang subsekuen monoton naik terpanjang
-function LIS_length($array) {
-    
-    // initialize
-    $k = 0;
-    $A = array();
-    $A[0] = -1000000;
-    $A[1] =  1000000;
-    
-    // loop
-    $len = count($array);
-    for ($i = 0; $i < $len; $i++) {
-        $x = $array[$i];
-        $l = array_insertion_index($A, $x);
-        
-        if (isset($A[$l + 1])) $A[$l + 1] = $x; // if exists replace, else append
-        else $A[] = $x;
-        
-        if ($l + 1 > $k) {
-            $k++;
-            if (isset($A[$k + 1])) $A[$k + 1] = 1000000;
-            else $A[] = 1000000;
-        }
-    }
-    
-    return $k;
-    
+function array_values_flatten(array $array) {
+    $return = array();
+    array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
+    return $return;
 }
 
 // mencari Longest Increasing Subsequences
@@ -118,21 +77,6 @@ function array_insertion_index($array, $n) {
     
 }
 
-// menghitung jumlah interval antar elemen array yang berdampingan
-// param  : $array of integer
-// return : jumlah interval
-function array_diff_sum($array) {
-    
-    $diff = array();
-    $len = count($array);
-    
-    for ($i = 1; $i < $len; $i++) {
-        $diff[] = $array[$i] - $array[$i-1];
-    }
-    
-    return array_sum($diff);
-}
-
 // menghitung rata-rata resiprokal dari interval elemen array berdampingan
 // param  : $array of integer
 // return : rata-rata interval resiprokal
@@ -164,7 +108,7 @@ function reciprocal_diff_average($array) {
 function longest_highlight_lookforward($hl_sequence, $min_length = 3) {
 
     $len = count($hl_sequence);
-    if ($len == 1) return array(array($hl_sequence[0], $hl_sequence[0] + $min_length));
+    if ($len == 1) return array(array((int)$hl_sequence[0], (int)$hl_sequence[0] + $min_length));
     
     sort($hl_sequence);
     
@@ -175,7 +119,7 @@ function longest_highlight_lookforward($hl_sequence, $min_length = 3) {
         while (isset($hl_sequence[$j]) && $hl_sequence[$j] - $hl_sequence[$j-1] <= $min_length+1 && $j < $len) {
             $j++;
         }
-        $res[] = array($hl_sequence[$i], $hl_sequence[$j-1]);
+        $res[] = array((int)$hl_sequence[$i], (int)$hl_sequence[$j-1]);
         $i = $j-1;
         $j++;
     }
@@ -184,3 +128,50 @@ function longest_highlight_lookforward($hl_sequence, $min_length = 3) {
 }
 
 // print_r(longest_highlight_lookforward(array(1, 2, 36, 4, 5, 6, 7)));
+
+
+// New scoring function
+
+function longest_contiguous_subsequence($seq, $maxgap = 5) {
+    
+    sort($seq);
+    $size = count($seq);
+    $start = 0;
+    $length = 0;
+    $maxstart = 0;
+    $maxlength = 0;
+    
+    for ($i = 0; $i < $size - 1; $i++) {
+        if (($seq[$i+1] - $seq[$i]) > $maxgap) {
+            $length = 0;
+            $start = $i+1;
+        } else {
+            $length++;
+            if ($length > $maxlength) {
+                $maxlength = $length;
+                $maxstart = $start;
+            }
+        }
+    }
+    
+    $maxlength++;
+    //echo "START: $maxstart \nFINISH: $maxfinish\n\n";
+    
+    return array_slice($seq, $maxstart, $maxlength);
+}
+
+// $aarr = array(7,33,209,218,233,8,210,207,211,212,213,291,1,214,292,2,158,190,215,265,275,216,217);
+// sort($aarr);
+
+// print_r($aarr);
+// print_r(longest_contiguous_subsequence($aarr));
+
+
+
+
+
+
+
+
+
+

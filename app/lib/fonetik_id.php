@@ -185,7 +185,6 @@ function id_fonetik_1_konsonan($string) {
 // return : string tanpa spasi
 function id_hilangkan_spasi($string) {
     
-    // menggunakan regex lebih mudah
     return preg_replace("/\s/", "", $string);
     
 }
@@ -195,7 +194,6 @@ function id_hilangkan_spasi($string) {
 // return : string tanpa vokal
 function id_hilangkan_vokal($string) {
     
-    // menggunakan regex lebih mudah
     return preg_replace("/A|I|U/", "", $string);
     
 }
