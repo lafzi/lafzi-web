@@ -9,7 +9,8 @@ function ekstrak_trigram($string) {
     
     $len = strlen($string);
     
-    if ($len <= 3) return array($string);
+    if ($len < 3) return array();
+    if ($len == 3) return array($string);
     
     $trigrams = array();
     for ($i = 0; $i <= $len - 3; $i++) {

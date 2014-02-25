@@ -49,6 +49,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
     // baca data teks quran untuk ditampilkan
     
     $quran_text = file("../data/quran_teks.txt", FILE_IGNORE_NEW_LINES);
+    $quran_trans = file("../data/trans-indonesian.txt", FILE_IGNORE_NEW_LINES);
     
     // khusus ayat dengan fawatihussuwar
     
@@ -83,7 +84,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
         // pertama dengan threshold 0.8
         $th = 0.95; //0.8;
         $matched_docs = search($query_final, $term_list_filename, $post_list_filename, $order, $filtered, $th); 
-        
+
         // jika ternyata tanpa hasil, turunkan threshold jadi 0.7
         if(count($matched_docs) == 0) {
             $th = 0.8; //0.7;
@@ -183,10 +184,10 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
     // hasil profiling waktu eksekusi
     $time_end = microtime(true);
     $time = $time_end - $time_start;
-
+    
 }
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -210,6 +211,14 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
 
     </head>
     <body>
+        <div class="overlay" id='copy-overlay' style="display: none;">
+            <div class="modalDialog" id='copy-dialog' style="display: none;">
+                <p style="color: #666;">Salin dengan menekan CTRL+C pada <em>keyboard</em>.</p>
+                <textarea id="copy-text" readonly="readonly"></textarea>
+                <input type="button" class="graybtn" value="Selesai" onclick="hideCopyDialog();" style="color: #666666; font-size: 10px; padding: 2px 5px; float: right; margin-top: 10px;"/>
+                <div style="clear: both"></div>
+            </div>
+        </div>
         <!-- <?php /*echo $th*/ ?>  -->
         <div id="main-wrap" class="bg-dots-light">
             <div id="main">    
@@ -229,8 +238,8 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                             <input type="button" class="search-option" value="Bantuan &raquo;" id="button-help"/>
                             <input type="button" class="search-option" value="Pengaturan &raquo;" id="button-option" title="Pengaturan tambahan"/>
                             <div id="search-checkboxes">
-                                <?php/*<input type="checkbox" id="os" name="order" <?php if(isset($order) && $order == true) echo 'checked="checked"' ?>/>
-                                <label for="os">Perhitungkan keterurutan</label>*/?>
+                                <?php /*<input type="checkbox" id="os" name="order" <?php if(isset($order) && $order == true) echo 'checked="checked"' ?>/>
+                                <label for="os">Perhitungkan keterurutan</label>*/ ?>
                                 <input type="checkbox" id="vw" name="vowel" <?php if(isset($vowel) && $vowel == true) echo 'checked="checked"' ?>/>
                                 <label for="vw">Perhitungkan huruf vokal</label>
                             </div>                        
@@ -254,12 +263,13 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                     </div>
                 </div>
                 
-<?php if ($query_trigrams_count > 0 && $query_trigrams_count < 4) echo "Berikanlah  masukan yang lebih panjang agar hasil lebih akurat." ?>
-                <?php if (isset($_GET['q']) && $_GET['q'] != "" && $query_trigrams_count > 3) : ?>
+                <?php if (isset($_GET['q']) && $_GET['q'] != "") : ?>
                     <div id="srp-header">
                         <h3>Hasil Pencarian (<?php echo number_format($num_doc_found) ?> hasil)</h3>
                         <?php if($num_doc_found > 0) : ?>
                         <div id="hl-switch" title="Tampilkan sorotan pada bagian yang kira-kira cocok">
+                            <input type="checkbox" id="cx_tr" checked="checked" onchange="if(this.checked == true) showTrans(); else hideTrans();"/>
+                            <label for="cx_tr">Tampilkan terjemahan</label>
                             <input type="checkbox" id="hl1" checked="checked" onchange="if(this.checked == true) showHilight(); else hideHilight();"/>
                             <label for="hl1">Tampilkan sorotan</label>
                         </div>
@@ -291,7 +301,6 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
 
                     <div id="srb-container">
                     <?php
-if ($query_trigrams_count > 3) {                   
                         $max_score = $query_trigrams_count;
 
                         $js_hl_functions = "";
@@ -308,10 +317,11 @@ if ($query_trigrams_count > 3) {
                                     echo '<div class="search-result-block alt">';
                                 
                                 list($d_no_surat, $d_nama_surat, $d_no_ayat, $d_isi_teks) = explode('|', $quran_text[$doc->id - 1]);
+                                list(,, $terjemah) = explode('|', $quran_trans[$doc->id - 1]);
                                 
                                 echo "<div class='sura-name'>";
                                 echo "<div class='num'>".($i+1)."</div>";
-                                echo "Surat {$d_nama_surat} ({$d_no_surat}) ayat {$d_no_ayat}";
+                                echo "<span id='aya_name_$i'>Surat {$d_nama_surat} ({$d_no_surat}) ayat {$d_no_ayat}</span>";
                                 echo "</div>";
                                 
                                 $percent_relevance = min(floor($doc->score / $max_score * 100), 100);
@@ -361,20 +371,38 @@ if ($query_trigrams_count > 3) {
                                 }
                                 echo         '</div>';
                                 
+                                echo         '<div class="aya_trans" id="aya_trans_'.$i.'">';
+                                echo         $terjemah;
+                                echo         '</div>';
+                                
+                                echo         '<div class="aya-tools">';
+                                echo            "<a class='sura-link graybtn' title='Buka ayat ini di Al-Quran online' href='http://quran.ksu.edu.sa/index.php?l=id#aya={$d_no_surat}_{$d_no_ayat}&m=hafs&qaree=husary&trans=id_indonesian' target='_blank'><span class='icon'></span> Buka di Al-Quran</a>";
+                                echo            "<a class='sura-link graybtn' title='Salin' href='#' onclick='showCopyDialog($i); return false;' style='margin-right: 5px;'>Salin Teks</a>";
+                                echo         '</div>';
+                                echo         '<div style="clear:both"></div>';
+                                
                                 echo     '</div>';
 
                                 echo '</div>';
+                                
+/*                                echo '<div class="copyzone">';
+                                echo '<p>Salin dengan CTRL+C pada <em>keyboard</em>.</p>';
+                                echo '<textarea>';
+                                echo "Surat {$d_nama_surat} ({$d_no_surat}) ayat {$d_no_ayat} \n\n";
+                                if (isset($quran_text_muqathaat_map[$d_no_surat][$d_no_ayat])) {
+                                    echo     $quran_text_muqathaat_map[$d_no_surat][$d_no_ayat];
+                                } else {
+                                    echo     $d_isi_teks;
+                                }
+                                echo "\n\n";
+                                echo $terjemah;
+                                echo '</textarea>';
+                                echo '</div>';*/
 
                                 $js_hl_functions .= "hilightTo('aya_res_$i', $js_array_str);"; 
                                 
                             }
                         }            
-}
-else
-{
-                                        echo "Masukkanlah lafaz yang lebih panjang agar hasil lebih akurat.";
-
-}
                     ?>
                     </div>
 
@@ -386,10 +414,9 @@ else
                 
                     <?php if ($num_doc_found > 10) : ?>
                     <div class="pager">
-                        Halaman : 
-                        
+                         
                         <input type="button" value="Sebelumnya" onclick="window.location = '<?php echo "?q=" . urlencode($_GET['q']) . "&order=" . (isset($_GET['order']) ? $_GET['order'] : "off") ."&vowel=" . (isset($_GET['vowel']) ? $_GET['vowel'] : "off") . "&page=" . ($page-1) ?>'" <?php if($page==1) echo 'disabled="disabled"' ?>/>
-                
+                        Halaman:
                         <select name="page" id="page-jump"  onchange='window.location = "<?php echo "?q=" . urlencode($_GET['q']) . "&order=" . (isset($_GET['order']) ? $_GET['order'] : "off") ."&vowel=" . (isset($_GET['vowel']) ? $_GET['vowel'] : "off") . "&page=" ?>" + this.value'>
                            
                         </select>
@@ -470,6 +497,17 @@ else
                 if (srbHeight < (vpHeight - 250)) {
                     $('#footer').css({position : 'absolute'});
                 }
+                
+                $('#copy-overlay').click(function(e) {
+                    e.stopPropagation();
+                    hideCopyDialog();
+                });                
+                $('#copy-dialog').click(function(e) {
+                    e.stopPropagation();
+                });                
+                $('#copy-text').click(function(){
+                    $(this).select();
+                });
 
             });
             
@@ -482,8 +520,34 @@ else
             function showHilight() {
                 <?php echo $js_hl_functions ?>
             }
+
+            function showTrans() {
+                $('.aya_trans').fadeIn('fast');
+            }
+            
+            function hideTrans() {
+                $('.aya_trans').fadeOut('fast');
+            }
             
             showHilight();
+            
+            function hideCopyDialog() {
+                $('#copy-overlay').fadeOut('fast');
+                $('#copy-dialog').fadeOut('fast');
+            }
+            
+            function showCopyDialog(id) {
+                var suraName = $('#aya_name_' + id).text();
+                var ayat = $('#aya_res_' + id).text();
+                var trans = $('#aya_trans_' + id).text();
+                
+                $('#copy-text').val(ayat + "\n\n" + trans + " [" + suraName + "]");
+                
+                $('#copy-overlay').fadeIn('fast');
+                $('#copy-dialog').fadeIn('fast');                
+
+                $('#copy-text').select();
+            }
 
         </script>        
         

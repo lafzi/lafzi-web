@@ -32,14 +32,18 @@ function search($query_final, $term_list_filename, $post_list_filename, $score_o
     $query_trigrams = trigram_frekuensi_posisi($query_final);
     $query_trigrams_count = count($query_trigrams);
     $query_trigrams_count_all = strlen($query_final) - 2;
-
+    
+    if ($query_trigrams_count <= 0 || $query_trigrams_count_all <= 0) {
+        return array();
+    };
+    
     $matched_posting_lists = array();
     $matched_docs = array();
 
     // untuk setiap trigram dari query
     foreach ($query_trigrams as $query_trigram => $qtfp) {
         list($qt_freq, $qt_pos) = $qtfp;
-
+        
         if (isset($term_hashmap[$query_trigram])) {    
             // ambil posting list yang sesuai untuk trigram ini
             $post_list_file->fseek($term_hashmap[$query_trigram]);

@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -36,8 +36,8 @@
                         <input type="button" class="search-option" value="Bantuan &raquo;" id="button-help"/>
                         <input type="button" class="search-option" value="Pengaturan &raquo;" id="button-option" title="Pengaturan tambahan"/>
                         <div id="search-checkboxes">
-                            <?php/*<input type="checkbox" id="os" name="order" checked="checked"/>
-                            <label for="os">Perhitungkan keterurutan</label>*/?>
+                            <?php /*<input type="checkbox" id="os" name="order" checked="checked"/>
+                            <label for="os">Perhitungkan keterurutan</label>*/ ?>
                             <input type="checkbox" id="vw" name="vowel" checked="checkes"/>
                             <label for="vw">Perhitungkan huruf vokal</label>
                         </div>                        

@@ -132,7 +132,7 @@ function longest_highlight_lookforward($hl_sequence, $min_length = 3) {
 
 // New scoring function
 
-function longest_contiguous_subsequence($seq, $maxgap = 5) {
+function longest_contiguous_subsequence($seq, $maxgap = 9) {
     
     sort($seq);
     $size = count($seq);

@@ -10,7 +10,7 @@
         <div id="main-wrap" class="bg-dots-light">
             <div id="main">
                 <div id="header">
-                    <img src="res/img/logo-s.png" alt="Lafzi" id="logo-small" width="124" height="54"/>
+                    <a href="./"><img src="res/img/logo-s.png" alt="Lafzi" id="logo-small" width="124" height="54"/></a>
                     <h1 id="title">
                         Tentang Lafzi
                     </h1>
@@ -20,11 +20,12 @@
                 <p>
                     <strong>Lafzi</strong> adalah aplikasi pencari lafaz pada Al-Quran. 
                     Aplikasi ini dibuat untuk memudahkan pencarian ayat dengan lafaz tertentu pada Al-Quran 
-                    hanya dengan aksara Latin biasa, tanpa perlu mengetikkannya dalam aksara Arab.
+                    hanya dengan aksara Latin biasa berdasarkan pelafalan pembicara bahasa Indonesia, tanpa perlu mengetikkannya dalam aksara Arab.
                 </p>
                 
                 <p>
-                    Aplikasi ini adalah hasil dari salah satu penelitian skripsi Departemen Ilmu Komputer, Institut Pertanian Bogor.
+                    Aplikasi ini adalah hasil dari penelitian skripsi Departemen Ilmu Komputer, Institut Pertanian Bogor oleh Muhammad Abrar Istiadi, S.Kom dengan
+                    pembimbing Ahmad Ridha, S.Kom MS.
                 </p>
                 
                 <?php include 'footer.php'; ?>
