@@ -11,7 +11,7 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    sodipodi:docname="mockup.svg"
-   inkscape:version="0.48.2 r9819"
+   inkscape:version="0.48.3.1 r9886"
    version="1.1"
    id="svg2"
    height="744.09448"
@@ -264,6 +264,42 @@
        y1="669.86218"
        x2="135"
        y2="669.86218" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3830"
+       id="linearGradient4866"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.68319304,0,0,0.68319304,28.131575,-113.88302)"
+       x1="289.3884"
+       y1="446.27066"
+       x2="287.3681"
+       y2="366.97369" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3830"
+       id="linearGradient5676"
+       x1="253.5"
+       y1="198.11218"
+       x2="253.75"
+       y2="133.11218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.7253879,0,0,1.7253879,-151.06789,-159.66086)" />
+    <filter
+       inkscape:collect="always"
+       id="filter5706">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.44053318"
+         id="feGaussianBlur5708" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter5752">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.72"
+         id="feGaussianBlur5754" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -272,14 +308,14 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.5"
-     inkscape:cx="344.31854"
-     inkscape:cy="516.73778"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="294.9983"
+     inkscape:cy="928.1976"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1280"
-     inkscape:window-height="776"
+     inkscape:window-width="1366"
+     inkscape:window-height="744"
      inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1" />
@@ -17324,6 +17360,18 @@
      id="layer1"
      transform="translate(0,-308.2677)">
     <rect
+       ry="7.75"
+       y="145.11218"
+       x="211.25"
+       height="72"
+       width="72"
+       id="rect5746"
+       style="fill:#000000;fill-opacity:1;stroke:none;filter:url(#filter5752)"
+       inkscape:export-filename="/home/abrari/public_html/lafzi/web/res/icon.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       transform="matrix(1.7496891,0,0,1.7496891,-157.07637,-164.06211)" />
+    <rect
        style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="rect5033"
        width="12"
@@ -17723,7 +17771,7 @@
        sodipodi:cy="14.360283"
        sodipodi:rx="4.2426405"
        sodipodi:ry="4.2426405"
-       d="m 19.445436,14.360283 a 4.2426405,4.2426405 0 1 1 -8.485281,0 4.2426405,4.2426405 0 1 1 8.485281,0 z"
+       d="m 19.445436,14.360283 c 0,2.343146 -1.899494,4.24264 -4.24264,4.24264 -2.343146,0 -4.242641,-1.899494 -4.242641,-4.24264 0,-2.343146 1.899495,-4.242641 4.242641,-4.242641 2.343146,0 4.24264,1.899495 4.24264,4.242641 z"
        transform="matrix(0.70710681,0,0,0.70710681,3.2499994,313.20793)"
        inkscape:tile-cx="14"
        inkscape:tile-cy="15.094484"
@@ -18062,6 +18110,54 @@
        inkscape:export-filename="/home/abrari/Skripsi/app/web/res/img/bg-dots.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
+    <rect
+       style="opacity:0.76000001;fill:none;stroke:none"
+       id="rect4888"
+       width="82.908272"
+       height="70.887451"
+       x="176.95348"
+       y="-173.55334"
+       transform="translate(0,308.2677)" />
+    <rect
+       style="fill:url(#linearGradient5676);fill-opacity:1;stroke:#ffffff;stroke-width:2.79950261;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect5668"
+       width="124.22793"
+       height="124.22793"
+       x="213.4203"
+       y="90.713943"
+       ry="13.371757"
+       inkscape:export-filename="/home/abrari/public_html/lafzi/web/res/icon.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text5686"
+       y="206.2552"
+       x="219.70982"
+       style="font-size:57.60050201px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;opacity:0.36979167;fill:#000000;fill-opacity:1;stroke:none;filter:url(#filter5706);font-family:KacstScreen;-inkscape-font-specification:KacstScreen Medium"
+       xml:space="preserve"
+       inkscape:export-filename="/home/abrari/public_html/lafzi/web/res/icon.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       transform="matrix(1.7496891,0,0,1.7496891,-157.07637,-164.06211)"><tspan
+         y="206.2552"
+         x="219.70982"
+         id="tspan5688"
+         sodipodi:role="line">ظ</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:100.78297424px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:KacstScreen;-inkscape-font-specification:KacstScreen Medium"
+       x="226.72893"
+       y="195.58316"
+       id="text4884"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/abrari/public_html/lafzi/web/res/icon.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan4886"
+         x="226.72893"
+         y="195.58316">ظ</tspan></text>
   </g>
   <flowRoot
      xml:space="preserve"

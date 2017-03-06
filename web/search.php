@@ -231,7 +231,7 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
                     <form action="" method="get" id="srp-search-form">
 
                         <div id="search-form-container">
-                            <input type="text" name="q" id="search-box" value="<?php if (isset($_GET['q'])) echo $_GET['q'] ?>" autocomplete="off"/><input type="submit" value="Cari" id="search-submit"/>
+                            <input type="text" name="q" id="search-box" value="<?php if (isset($_GET['q'])) echo htmlentities($_GET['q']); ?>" autocomplete="off"/><input type="submit" value="Cari" id="search-submit"/>
                         </div>
 
                         <div id="search-options-container">

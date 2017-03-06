@@ -10,6 +10,8 @@ function id_fonetik($string, $tanpa_vokal = true) {
     $string = preg_replace("/\s+/", " ", $string);
     $string = preg_replace("/\-/", " ", $string);
     $string = preg_replace("/[^A-Z`'\-\s]/", "", $string);
+
+    // echo $string . "\n";
     
     // transformasi
     $string = id_substitusi_vokal($string);
@@ -198,9 +200,4 @@ function id_hilangkan_vokal($string) {
     
 }
 
-/*
-echo id_fonetik(
-"INNAA LILLAAHI WAINNA ILAIHI ROOJI'UN MINAL JINNI WAL-ZAANIYATI",
-false)
-. "\n";
-*/
+

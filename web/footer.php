@@ -2,7 +2,9 @@
                     <div id="links">
                         <a href="http://cs.ipb.ac.id">Computer Science IPB</a>
                         |
-                        <a href="./">Lafzi</a>
+                        <a href="./">Lafzi Web</a>
+                        |
+                        <a href="/desktop">Lafzi Desktop</a>
                         |
                         <a href="about.php">Tentang Lafzi</a>
                         <?php /*|
