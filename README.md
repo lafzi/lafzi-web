@@ -15,3 +15,8 @@ Menjalankan
 
 Tidak ada setup khusus karena aplikasi ini tidak menggunakan database. 
 Disarankan menggunakan sistem operasi Linux karena sistem cache mengandalkan command di Linux.
+
+Lisensi
+---
+
+GPL (GNU General Public License) v3. Anda bebas menggunakan, memodifikasi, dan mendistribusikan software ini dengan syarat tetap menjadikannya *open-source*.
