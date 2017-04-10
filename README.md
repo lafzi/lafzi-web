@@ -11,7 +11,8 @@ Menjalankan
 ---
 
 1. Clone atau download repository ini ke folder web server (htdocs atau /var/www/html)
-2. Langsung kunjungi di browser
+2. Aktifkan module `mbstring` pada PHP dengan command `sudo apt-get install phpX.Y-mbstring` (sesuaikan `X.Y` dengan versi PHP yang terinstal)
+3. Langsung kunjungi di browser
 
 Tidak ada setup khusus karena aplikasi ini tidak menggunakan database. 
 Disarankan menggunakan sistem operasi Linux karena sistem cache mengandalkan command di Linux.
