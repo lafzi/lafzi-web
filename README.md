@@ -14,7 +14,12 @@ Menjalankan
 2. Aktifkan module `mbstring` pada PHP dengan command `sudo apt-get install phpX.Y-mbstring` (sesuaikan `X.Y` dengan versi PHP yang terinstal)
 3. Langsung kunjungi di browser
 
-Tidak ada setup khusus karena aplikasi ini tidak menggunakan database. 
+##### Optional
+Anda bisa mengaktifkan index menggunakan Redis dengan langkah :
+1. Mengganti value `use_redis` pada *web/search.php* dengan **true**
+2. Pastikan service Redis telah aktif pada host server
+3. Jalankan *redis-indexer.php* dari repository https://github.com/lafzi/lafzi-indexer pada host server
+
 Disarankan menggunakan sistem operasi Linux karena sistem cache mengandalkan command di Linux.
 
 Lisensi
