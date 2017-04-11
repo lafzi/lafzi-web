@@ -9,7 +9,7 @@ include_once '../lib/predis/autoload.php';
 
 // fungsi pencari
 // param  : $query_final yang siap cari (sudah melalui pengodean fonetik)
-//          $term_list_filename nama file term list
+//          $vocal aktif atau tidak
 //          $post_list_filename nama file posting list
 //          $score_order true jika ingin menghitung keterurutan kemunculan term
 // return : array of found_doc object
@@ -57,13 +57,17 @@ function search($query_final, $vocal, $post_list_filename, $score_order = true, 
 
             // index dari redis
             if ($redis->exists($key)){
-                //ambil posting list yang sesuai untuk trigram ini
-                $matched_posting_lists = explode(';',trim($redis->get($key)));
+                //ambil posting list yang sesuai untuk trigram ini dari Redis
+                $matched_posting_lists = $redis->hgetall($key);
 
                 // untuk setiap posting list untuk trigram ini
-                foreach ($matched_posting_lists as $data) {
-                    list ($doc_id, $term_freq, $term_pos) = explode(':', $data);
-                    $term_pos = explode(',', $term_pos);
+                foreach ($matched_posting_lists as $doc_id => $json_freq_and_pos) {
+
+                    // decode message Redis
+                    $freq_and_pos = json_decode($json_freq_and_pos, true);
+
+                    $term_freq = $freq_and_pos['freq'];
+                    $term_pos = $freq_and_pos['pos'];
 
                     // hitung jumlah kemunculan dll
                     if (isset($matched_docs[$doc_id])) {
