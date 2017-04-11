@@ -10,30 +10,9 @@ include_once '../lib/predis/autoload.php';
 // fungsi pencari
 // param  : $query_final yang siap cari (sudah melalui pengodean fonetik)
 //          $vocal aktif atau tidak
-//          $post_list_filename nama file posting list
 //          $score_order true jika ingin menghitung keterurutan kemunculan term
 // return : array of found_doc object
-function search($query_final, $vocal, $post_list_filename, $score_order = true, $filtered = true, $filter_threshold = 0.8, $use_redis = false) {
-
-    $term_list_filename = $vocal ?  "../data/index_termlist_vokal.txt" : "../data/index_termlist_nonvokal.txt";
-    $key_prefix = $vocal ? "vocal-" : "nonvocal-";
-
-    Predis\Autoloader::register();
-    $redis = new Predis\Client();
-
-    // baca seluruh term list simpan dalam hashmap
-    $term_hashmap = array();
-    $term_list = fopen($term_list_filename, 'r');
-
-    while (($line = fgets($term_list, 32)) !== false) {
-        list($term, $offset) = explode('|', $line);
-        $term_hashmap[$term] = intval($offset);
-    }
-
-    fclose($term_list);    
-    
-    // akses posting list
-    $post_list_file = new SplFileObject($post_list_filename);
+function search($query_final, $vocal, $score_order = true, $filtered = true, $filter_threshold = 0.8, $use_redis = false) {
 
     // ekstrak trigram dari query
     $query_trigrams = trigram_frekuensi_posisi($query_final);
@@ -53,6 +32,10 @@ function search($query_final, $vocal, $post_list_filename, $score_order = true, 
         
         if ($use_redis) {
 
+            Predis\Autoloader::register();
+            $redis = new Predis\Client();
+
+            $key_prefix = $vocal ? "vocal-" : "nonvocal-";
             $key = $key_prefix.$query_trigram;
 
             // index dari redis
@@ -78,6 +61,28 @@ function search($query_final, $vocal, $post_list_filename, $score_order = true, 
             }
 
         } else {
+
+            if ($vocal) {
+                $term_list_filename = "../data/index_termlist_vokal.txt";
+                $post_list_filename = "../data/index_postlist_vokal.txt";
+            } else {
+                $term_list_filename = "../data/index_termlist_nonvokal.txt";
+                $post_list_filename = "../data/index_postlist_nonvokal.txt";
+            }
+
+            // baca seluruh term list simpan dalam hashmap
+            $term_hashmap = array();
+            $term_list = fopen($term_list_filename, 'r');
+
+            while (($line = fgets($term_list, 32)) !== false) {
+                list($term, $offset) = explode('|', $line);
+                $term_hashmap[$term] = intval($offset);
+            }
+
+            fclose($term_list);
+
+            // akses posting list
+            $post_list_file = new SplFileObject($post_list_filename);
 
             // index dari file
             if (isset($term_hashmap[$query_trigram])) {
