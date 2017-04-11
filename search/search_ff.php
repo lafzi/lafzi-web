@@ -57,17 +57,12 @@ function search($query_final, $vocal, $post_list_filename, $score_order = true, 
 
             // index dari redis
             if ($redis->exists($key)){
-                //ambil posting list yang sesuai untuk trigram ini dari Redis
-                $matched_posting_lists = $redis->hgetall($key);
+                //ambil posting list yang sesuai untuk trigram ini
+                $matched_posting_lists = json_decode($redis->get($key),true);
 
                 // untuk setiap posting list untuk trigram ini
-                foreach ($matched_posting_lists as $doc_id => $json_freq_and_pos) {
-
-                    // decode message Redis
-                    $freq_and_pos = json_decode($json_freq_and_pos, true);
-
-                    $term_freq = $freq_and_pos['freq'];
-                    $term_pos = $freq_and_pos['pos'];
+                foreach ($matched_posting_lists as $data) {
+                    list ($doc_id, $term_freq, $term_pos) = $data;
 
                     // hitung jumlah kemunculan dll
                     if (isset($matched_docs[$doc_id])) {
