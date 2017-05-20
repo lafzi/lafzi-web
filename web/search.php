@@ -211,6 +211,13 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
 
     </head>
     <body>
+		
+		<div id="mobile_badge" style="position: fixed; top: 10px; right: 10px;">		
+			<a href='https://play.google.com/store/apps/details?id=org.lafzi.android&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1' title="Baru! Lafzi versi Android" target="_blank">
+				<img alt='Temukan di Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' width="180"/>
+			</a>
+		</div>		
+		
         <div class="overlay" id='copy-overlay' style="display: none;">
             <div class="modalDialog" id='copy-dialog' style="display: none;">
                 <p style="color: #666;">Salin dengan menekan CTRL+C pada <em>keyboard</em>.</p>

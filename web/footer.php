@@ -6,6 +6,8 @@
                         |
                         <a href="/desktop">Lafzi Desktop</a>
                         |
+                        <a href="https://play.google.com/store/apps/details?id=org.lafzi.android&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">Lafzi Android</a>
+                        |
                         <a href="about.php">Tentang Lafzi</a>
                         <?php /*|
                         <a href="http://abrari.wordpress.com/category/skripsi" target="_blank">Development Blog</a>
