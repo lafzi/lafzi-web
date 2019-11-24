@@ -6,6 +6,10 @@
 // fwrite($lf, $ls);
 // fclose($lf);
 
+$configs = (object) array(
+               'use_redis' => false
+           );
+
 if (isset($_GET['q']) && $_GET['q'] != "") {
 
     //if (isset($_GET['order'])) {
@@ -37,14 +41,6 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
 
     $query_final = id_fonetik($query, !$vowel);
     $query_trigrams_count = strlen($query_final) - 2;
-
-    if ($vowel) {
-        $term_list_filename = "../data/index_termlist_vokal.txt";
-        $post_list_filename = "../data/index_postlist_vokal.txt";
-    } else {
-        $term_list_filename = "../data/index_termlist_nonvokal.txt";
-        $post_list_filename = "../data/index_postlist_nonvokal.txt";
-    }
     
     // baca data teks quran untuk ditampilkan
     
@@ -83,18 +79,18 @@ if (isset($_GET['q']) && $_GET['q'] != "") {
         
         // pertama dengan threshold 0.8
         $th = 0.95; //0.8;
-        $matched_docs = search($query_final, $term_list_filename, $post_list_filename, $order, $filtered, $th); 
+        $matched_docs = search($query_final, $vowel, $order, $filtered, $th, $configs->use_redis);
 
         // jika ternyata tanpa hasil, turunkan threshold jadi 0.7
         if(count($matched_docs) == 0) {
             $th = 0.8; //0.7;
-            $matched_docs = search($query_final, $term_list_filename, $post_list_filename, $order, $filtered, $th); 
+            $matched_docs = search($query_final, $vowel, $order, $filtered, $th, $configs->use_redis);
         }
 
         // jika ternyata tanpa hasil, turunkan threshold jadi 0.6
         if(count($matched_docs) == 0) {
             $th = 0.7; //0.6;
-            $matched_docs = search($query_final, $term_list_filename, $post_list_filename, $order, $filtered, $th); 
+            $matched_docs = search($query_final, $vowel, $order, $filtered, $th, $configs->use_redis);
         }
         
         // jika masih tanpa hasil, ya sudah
